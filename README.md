@@ -34,26 +34,26 @@ Industrial_AI 레퍼지토리는 관련 포트폴리오를 정리하여 업로�
     * 모델별 예측 성능 비교 분석 (MAE, RMSE 등)
     * 데이터 전처리 및 특성 공학을 통한 모델 성능 향상
 * **결과 요약**:
+    LSTM 모델이 다른 모델에 비해 안정적이고 정확한 예측 성능을 보였습니다. 상세 내용은 아래 링크에서 전체 결과 보고서를 확인하실 수 있습니다.
 
-    *LSTM 모델이 다른 모델에 비해 안정적이고 정확한 예측 성능을 보였습니다. 상세 내용은 아래 결과 보고서 이미지를 참고해주세요.*
-
-    <img src="업로드된_전력수요예측_이미지_링크" alt="전력 수요 예측 결과" width="700"/>
+    **[➡️ 결과 보고서 바로가기](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_projects_%EC%A0%84%EB%9E%B5%20%EC%88%98%EC%9A%94%20%EC%98%88%EC%B8%A1%20%EB%AA%A8%EB%8D%B8%20%EA%B0%9C%EB%B0%9C/%EC%A0%84%EB%A0%A5%20%EC%88%98%EC%9A%94%20%EC%98%88%EC%B8%A1%20%EB%AA%A8%EB%8D%B8%20%EB%B9%84%EA%B5%90%20%EA%B5%AC%ED%98%84%20%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_%EC%86%A1%EA%B3%B5%ED%98%B8%2020250602%20(%EC%B5%9C%EC%A2%85).pptx)**
 
 <br>
 
-### 2. 금융기관의 신용사기 거래 탐지 모델
+### 2. Flask를 활용한 은행 웹서버 제작
 
-은행 거래 데이터를 기반으로 신용카드 사기 거래를 탐지하는 이상 탐지 모델을 개발한 프로젝트입니다.
+Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 확인 기능이 포함된 은행 웹 애플리케이션을 구축한 프로젝트입니다.
 
 * **프로젝트 링크**: [**Portfolio_project_bank**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_project_bank)
 * **주요 내용**:
-    * 불균형 데이터 처리를 위한 SMOTE 기법 적용
-    * Isolation Forest, Autoencoder 등 다양한 이상 탐지 알고리즘 비교
-    * 모델의 재현율(Recall)과 정밀도(Precision)를 중심으로 성능 평가
+    * Flask를 이용한 웹 서버 라우팅 및 세션 관리
+    * 사용자 로그인/로그아웃 기능 구현
+    * 입금, 출금 기능 및 잔액 부족 등 예외 처리
 * **결과 요약**:
+    사용자 세션 관리를 통해 안전한 금융 거래를 시뮬레이션하고, 기본적인 웹 서버의 동작 원리를 구현했습니다. 상세 내용은 아래 링크에서 전체 결과 보고서를 확인하실 수 있습니다.
 
-    *Autoencoder 모델이 소수의 사기 거래를 효과적으로 탐지하며 가장 우수한 성능을 나타냈습니다. 상세 내용은 아래 결과 보고서 이미지를 참고해주세요.*
-
-    <img src="업로드된_은행사기탐지_이미지_링크" alt="은행 사기 탐지 결과" width="700"/>
+    **[➡️ 결과 보고서 바로가기](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_project_bank/%EC%9D%80%ED%96%89%EC%9B%B9%EC%84%9C%EB%B2%84%20%EC%A0%9C%EC%9E%91_%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_%EC%86%A1%EA%B3%B5%ED%98%B8.pptx)**
 
 <br>
+
+---
