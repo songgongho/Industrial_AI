@@ -1,0 +1,3 @@
+[submodule "projects/household_analysis"]
+	path = projects/household_analysis
+	url = https://github.com/songgongho/household_power_consumption.git
