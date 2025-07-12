@@ -1,4 +1,10 @@
+전력 수요 예측 모델 구현 포트폴리오
+
+
+
 다양한 딥러닝 모델을 활용한 전력 수요 예측 모델 구현
+
+
 주어진 텍스트파일(가정용 전기 사용량 시계열 데이터)를 활용하여 전력 수요 예측 모델 개발
    * 데이터셋 (Individual Household Electric Power Consumption)
    다운로드 링크 : https://archive.ics.uci.edu/dataset/235/individual+household+electric+power+consumption
