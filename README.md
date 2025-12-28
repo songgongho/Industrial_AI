@@ -178,7 +178,7 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
 
 청주시의 버스 운행 데이터를 분석하여 비정상적인 패턴을 탐지하는 프로젝트입니다. 스마트 시티의 교통 관리에 직접 활용될 수 있습니다.
 
-* **프로젝트 링크**: [**Portfolio_Cheongju-bus-anomaly-detection**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_Cheongju_bus_anomaly_detection)
+* **프로젝트 링크**: [**Portfolio_Cheongju-bus-anomaly-detection**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_Cheongju_bus_anomaly_detection_project)
 
 * **주요 내용**:
     * 공공 API를 활용한 실시간 버스 데이터 수집
