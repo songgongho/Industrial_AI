@@ -59,7 +59,7 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
 
 여러 환경 변수(온도, 습도 등)를 동시에 고려하여 특정 지역의 공기질(미세먼지 농도 등)을 예측하는 다변량 시계열 분석 프로젝트입니다.
 
-* **프로젝트 링크**: [**Portfolio_projects_공기질예측**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_projects_%EA%B3%B5%EA%B8%B0%EC%A7%88%EC%98%88%EC%B8%A1)
+* **프로젝트 링크**: [**Portfolio_projects_공기질예측**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_projects_%EA%B3%B5%EA%B8%B0%EC%A7%A8%EC%98%88%EC%B8%A1)
 * **주요 내용**:
     * 여러 센서 데이터를 통합한 다변량 시계열 데이터셋 구축
     * 다변량 예측에 적합한 LSTM, GRU 등의 딥러닝 모델 활용
@@ -67,7 +67,7 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
 * **결과 요약**:
     다변량 데이터를 함께 학습했을 때 단일 변수 모델보다 예측 정확도가 향상되는 것을 확인했습니다.
 
-    **[➡️ 결과 보고서 바로가기](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_projects_%EA%B3%B5%EA%B8%B0%EC%A7%88%EC%98%88%EC%B8%A1/%EA%B3%B5%EA%B8%B0%EC%A7%88(%EB%8B%A4%EB%B3%80%EB%9F%89)%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EA%B8%B0%EB%B0%98%20%EC%98%88%EC%B8%A1%EB%AA%A8%EB%8D%B8%20%EA%B0%9C%EB%B0%9C%20%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_%EC%86%A1%EA%B3%B5%ED%98%B8%2020250616.pptx)**
+    **[➡️ 결과 보고서 바로가기](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_projects_%EA%B3%B5%EA%B8%B0%EC%A7%A8%EC%98%88%EC%B8%A1/%EA%B3%B5%EA%B8%B0%EC%A7%A8(%EB%8B%A4%EB%B3%80%EB%9F%89)%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EA%B8%B0%EB%B0%98%20%EC%98%88%EC%B8%A1%EB%AA%A8%EB%8D%B8%20%EA%B0%9C%EB%B0%9C%20%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_%EC%86%A1%EA%B3%B5%ED%98%B8%2020250616.pptx)**
 
 <br>
 
@@ -81,8 +81,7 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
 
 TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기법까지를 체계적으로 학습할 수 있는 포트폴리오입니다.
 
-* **프로젝트 링크**: [**Portfolio-DeepLearning-Fundamentals**][(   https://github.com/songgongho/Industrial_AI/Portfolio-DeepLearning-Fundamentals
-)
+* **프로젝트 링크**: [**Portfolio-DeepLearning-Fundamentals**](https://github.com/songgongho/Portfolio-DeepLearning-Fundamentals)
 
 * **주요 내용**:
     * **모듈 1 - 회귀 (1개)**: MSE, MAE, Huber Loss 손실함수 비교
@@ -110,7 +109,7 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
     - ✨ **명확성**: 단계별 학습 경로 제시
     - ✨ **재현성**: 모든 결과 재현 가능
 
-* **[➡️ 최종 결과 보고서](https://github.com/songgongho/Industrial_AI/Portfolio-DeepLearning-Fundamentals/blob/main/FINAL_REPORT.md)**
+* **[➡️ 최종 결과 보고서](https://github.com/songgongho/Portfolio-DeepLearning-Fundamentals/blob/main/FINAL_REPORT.md)**
 
 <br>
 
@@ -120,7 +119,7 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
 
 머신러닝의 핵심 알고리즘과 개념을 실습을 통해 깊이 있게 학습할 수 있는 프로젝트입니다.
 
-* **프로젝트 링크**: [**Portfolio_ML-Fundamentals**]([[https://github.com/songgongho/Industrial_AI/Portfolio_ML-Fundamentals](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_ML-Fundamentals)])
+* **프로젝트 링크**: [**Portfolio_ML-Fundamentals**](https://github.com/songgongho/Portfolio_ML-Fundamentals)
 
 * **주요 내용**:
     * 지도학습 (Supervised Learning) 기초
@@ -133,9 +132,6 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
     - 머신러닝 입문자
     - 알고리즘의 이론적 배경을 이해하고 싶은 학습자
     - 실제 데이터에 적용하고 싶은 개발자
-* **[➡️ 최종 결과 보고서]([https://github.com/songgongho/Industrial_AI/Portfolio-DeepLearning-Fundamentals/blob/main/FINAL_REPORT.md)](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_ML-Fundamentals/docs/COMPLETION_REPORT.md
-)**
-
 
 <br>
 
@@ -145,8 +141,7 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
 
 타이타닉 침몰 사건의 승객 데이터를 분석하여 생존 가능성을 예측하는 실전 머신러닝 프로젝트입니다.
 
-* **프로젝트 링크**: [**Portfolio_Titanic_Survival_Prediction**]([https://github.com/songgongho/Industrial_AI/Portfolio_Titanic_Survival_Prediction](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_Titanic_Survival_Prediction
-))
+* **프로젝트 링크**: [**Portfolio_Titanic_Survival_Prediction**](https://github.com/songgongho/Portfolio_Titanic_Survival_Prediction)
 
 * **주요 내용**:
     * 타이타닉 승객 데이터 EDA (탐색적 데이터 분석)
@@ -168,8 +163,6 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
     - 실제 데이터셋을 다루는 실무 경험
     - 분류 문제의 전체 과정 이해
     - 모델 비교 및 선택 기준 학습
- 
-* **[➡️ 최종 결과 보고서]**([[https://github.com/songgongho/Industrial_AI/Portfolio-DeepLearning-Fundamentals/blob/main/FINAL_REPORT.md)])**
 
 <br>
 
@@ -179,7 +172,7 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
 
 청주시의 버스 운행 데이터를 분석하여 비정상적인 패턴을 탐지하는 프로젝트입니다. 스마트 시티의 교통 관리에 직접 활용될 수 있습니다.
 
-* **프로젝트 링크**: [**Portfolio_Cheongju-bus-anomaly-detection**](https://github.com/songgongho/Industrial_AI/Portfolio_Cheongju-bus-anomaly-detection)
+* **프로젝트 링크**: [**Portfolio_Cheongju-bus-anomaly-detection**](https://github.com/songgongho/Portfolio_Cheongju-bus-anomaly-detection)
 
 * **주요 내용**:
     * 공공 API를 활용한 실시간 버스 데이터 수집
@@ -203,8 +196,6 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
     - Scikit-learn (이상 탐지)
     - TensorFlow (자동 인코더)
     - Matplotlib & Folium (시각화)
-* **[➡️ 최종 결과 보고서]([https://github.com/songgongho/Industrial_AI/Portfolio-DeepLearning-Fundamentals/blob/main/FINAL_REPORT.md)](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_ML-Fundamentals/docs/COMPLETION_REPORT.md
-)**
 
 <br>
 
@@ -214,7 +205,7 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
 
 산업 현장에서 자주 사용되는 이상 탐지 기법들을 구현하고 성능을 비교 분석하는 프로젝트입니다.
 
-* **프로젝트 링크**: [**Portfolio_Anomaly Detection_1**]([https://github.com/songgongho/Industrial_AI/Portfolio_Anomaly%20Detection_1](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_Anomaly%20Detection_1))
+* **프로젝트 링크**: [**Portfolio_Anomaly Detection_1**](https://github.com/songgongho/Portfolio_Anomaly%20Detection_1)
 
 * **주요 내용**:
     * 이상 탐지의 개념 및 적용 분야
@@ -239,9 +230,6 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
     - 7가지 이상 탐지 기법 구현
     - 성능 벤치마크 완료
     - 각 방법의 장단점 분석
- 
-      
-* **[➡️ 최종 결과 보고서]([[https://github.com/songgongho/Industrial_AI/Portfolio-DeepLearning-Fundamentals/blob/main/FINAL_REPORT.md](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_Anomaly%20Detection_1/Anomaly%20Detection%20Results%20Report_SONGGONGHO.pdf))]**
 
 <br>
 
