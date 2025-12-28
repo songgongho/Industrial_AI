@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>청주 버스 이상 감지 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --font-family-display: Arial, sans-serif;
+            --font-weight-display: 600;
+            --font-family-content: Arial, sans-serif;
+            --font-weight-content: 400;
+            --font-size-content: 16px;
+            --line-height-content: 1.4;
+        }
+
+        body.theme-dark {
+            --color-bg-base: #0f172a;
+            --color-bg-elevated: #020617;
+            --color-bg-surface: #1e293b;
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-text-muted: #94a3b8;
+            --color-text-accent: #38bdf8;
+            --color-primary: #38bdf8;
+            --color-primary-foreground: #0f172a;
+        }
+
+        body {
+            font-family: var(--font-family-content);
+            font-weight: var(--font-weight-content);
+            font-size: var(--font-size-content);
+            line-height: var(--line-height-content);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #0f172a;
+            padding: 10px 0;
+        }
+
+        body {
+            font-family: var(--font-family-content);
+            font-weight: var(--font-weight-content);
+            font-size: var(--font-size-content);
+            line-height: var(--line-height-content);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #0f172a;
+            padding: 10px 0;
+            margin: 0;
+        }
+
+        .slide {
+            width: 960px;
+            height: 540px;
+            margin: 0 auto 10px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+            background-color: #0f172a;
+            color: #f1f5f9;
+            padding: 1.5rem;
+            page-break-after: always;
+            box-sizing: border-box;
+        }
+
+        .row { flex-direction: row; }
+        .col { flex-direction: column; }
+        .center {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .fill-width { flex: 1; }
+        .fill-height { flex: 1; display: flex; flex-direction: column; }
+
+        .gap-sm { gap: 0.5rem; }
+        .gap-md { gap: 1rem; }
+        .gap-lg { gap: 1.5rem; }
+        .gap-xl { gap: 2rem; }
+
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .p-8 { padding: 2rem; }
+        .p-12 { padding: 3rem; }
+        .p-16 { padding: 4rem; }
+
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-family-display);
+            font-weight: var(--font-weight-display);
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        h1 { font-size: 3.75rem; }
+        h2 { font-size: 2.25rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+
+        .text-6xl { font-size: 3.75rem; }
+        .text-5xl { font-size: 3rem; }
+        .text-4xl { font-size: 2.25rem; }
+        .text-3xl { font-size: 1.875rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-base { font-size: 1rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+
+        .opacity-90 { opacity: 0.9; }
+        .opacity-80 { opacity: 0.8; }
+
+        ul, ol {
+            margin-left: 2rem;
+            line-height: 1.8;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+        }
+
+        .card-rect {
+            padding: 2rem;
+            background-color: #1e293b;
+            border-left: 4px solid #38bdf8;
+            border-radius: 6px;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 2rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: #38bdf8;
+            color: #0f172a;
+            padding: 0.6rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.5rem;
+            border: 1px solid #1e293b;
+            color: #cbd5e1;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+
+        .highlight { color: #38bdf8; font-weight: 600; }
+        .success { color: #4ade80; }
+        .warning { color: #fbbf24; }
+        .danger { color: #f87171; }
+    </style>
+<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=2978"></script>
+</head>
+<body class="theme-dark">
+
+<!-- Slide 1: 타이틀 -->
+<section class="slide col center" style="background-color: #020617; padding: 2rem;">
+    <h1 style="color: #38bdf8; margin-bottom: 0.8rem; font-size: 3rem;">청주 버스 이상 감지</h1>
+    <h2 style="color: #cbd5e1; font-size: 1.6rem; margin-bottom: 1.5rem; font-weight: 400;">AI 기반 실시간 알람 & 대응</h2>
+    <p style="color: #cbd5e1; font-size: 1.1rem; margin-bottom: 1.5rem;">🚌 스마트 시티 운영 혁신</p>
+    <p style="color: #94a3b8; font-size: 0.9rem;">📊 KMeans + IsolationForest + LSTM-AE</p>
+    <div class="page-number">1</div>
+</section>
+
+<!-- Slide 2: 문제 상황 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1.2rem; font-size: 1.8rem;">문제 상황</h2>
+    <div class="fill-height col gap-lg">
+        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+            <div style="font-size: 1.5rem; flex-shrink: 0;">❓</div>
+            <div>
+                <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 1rem;">현재의 버스 운영 문제</h4>
+                <p style="color: #cbd5e1; font-size: 0.85rem;">폭설, 악천후 → 배차 이상 | 불규칙 운행</p>
+            </div>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+            <div style="font-size: 1.5rem; flex-shrink: 0;">⚠️</div>
+            <div>
+                <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 1rem;">사후 대응의 한계</h4>
+                <p style="color: #cbd5e1; font-size: 0.85rem;">대응까지 <span class="highlight">1~2시간</span> 지연 | 비용 손실</p>
+            </div>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+            <div style="font-size: 1.5rem; flex-shrink: 0;">🔍</div>
+            <div>
+                <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 1rem;">데이터 활용 부족</h4>
+                <p style="color: #cbd5e1; font-size: 0.85rem;">데이터 미활용 | 패턴 분석 없음</p>
+            </div>
+        </div>
+    </div>
+    <div class="page-number">2</div>
+</section>
+
+<!-- Slide 3: 솔루션 개요 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1.2rem; font-size: 1.8rem;">🎯 AI 이상 감지 시스템</h2>
+    <div class="fill-height col gap-lg">
+        <div style="display: flex; gap: 1.2rem;">
+            <div class="fill-width" style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1rem;">
+                <h4 style="color: #38bdf8; margin-bottom: 0.4rem; font-size: 0.95rem;">📍 데이터</h4>
+                <p style="color: #cbd5e1; font-size: 0.75rem;">• TAGO API<br/>• 115개 노선<br/>• 날씨 데이터</p>
+            </div>
+            <div class="fill-width" style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1rem;">
+                <h4 style="color: #38bdf8; margin-bottom: 0.4rem; font-size: 0.95rem;">🤖 AI 분석</h4>
+                <p style="color: #cbd5e1; font-size: 0.75rem;">• KMeans (5개)<br/>• IsolationForest<br/>• LSTM-AE</p>
+            </div>
+        </div>
+        <div style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1rem; margin-top: 0.8rem;">
+            <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 0.95rem;">🚨 실시간 알람</h4>
+            <p style="color: #cbd5e1; font-size: 0.75rem;">감지 → 즉시 알람 | 예비차량 배치 | 배차 조정</p>
+        </div>
+    </div>
+    <div class="page-number">3</div>
+</section>
+
+<!-- Slide 4: 데이터셋 상세 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1rem; font-size: 1.8rem;">📂 데이터셋 구성</h2>
+    <div class="fill-height col gap-sm items-center">
+        <div style="display: flex; gap: 1rem; width: 100%; align-items: flex-start;">
+            <div class="fill-width" style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1rem;">
+                <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 0.9rem;">🚌 TAGO 운행 데이터</h4>
+                <p style="color: #cbd5e1; font-size: 0.7rem;"><strong>115개</strong> 노선 | <strong>30일</strong> | <strong>2,760</strong> 조합</p>
+            </div>
+            <div class="fill-width" style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1rem;">
+                <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 0.9rem;">🌦️ 날씨</h4>
+                <p style="color: #cbd5e1; font-size: 0.7rem;">폭설, 강우, 기온 | StandardScaler 정규화</p>
+            </div>
+        </div>
+        <div style="text-align: center; width: 100%;">
+            <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/YOUR_DATASET_IMAGE_ID" style="max-width: 100%; max-height: 200px; object-fit: contain; border-radius: 6px;">
+        </div>
+    </div>
+    <div class="page-number">4</div>
+</section>
+
+<!-- Slide 5: 알고리즘 & 성능 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1rem; font-size: 1.8rem;">🔧 알고리즘</h2>
+    <div class="fill-height col">
+        <table style="font-size: 0.7rem;">
+            <thead>
+                <tr>
+                    <th style="width: 14%;">단계</th>
+                    <th style="width: 18%;">알고리즘</th>
+                    <th style="width: 22%;">파라미터</th>
+                    <th style="width: 46%;">역할</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1. 정규화</strong></td>
+                    <td>StandardScaler</td>
+                    <td>mean=0, std=1</td>
+                    <td>시간대별 운행 수 표준화</td>
+                </tr>
+                <tr style="background-color: rgba(56, 189, 248, 0.15);">
+                    <td><strong>2. 클러스터링</strong></td>
+                    <td><span style="color: #38bdf8; font-weight: 600;">KMeans</span></td>
+                    <td>n_clusters=5</td>
+                    <td><span style="color: #38bdf8; font-weight: 600;">5가지 운행 패턴 자동 분류</span></td>
+                </tr>
+                <tr style="background-color: rgba(248, 113, 113, 0.1);">
+                    <td><strong>3. 이상탐지</strong></td>
+                    <td><span style="color: #f87171;">IsolationForest</span></td>
+                    <td>n_estimators=200, contamination=0.1</td>
+                    <td><span style="color: #4ade80;">상위 10% 비정상 | AUROC 0.89</span></td>
+                </tr>
+                <tr>
+                    <td><strong>4. 시계열</strong></td>
+                    <td>LSTM-AE</td>
+                    <td>latent_dim=32, epochs=50</td>
+                    <td>재구성 오류 → 이상도 | AUROC <span style="color: #4ade80;">0.975</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="page-number">5</div>
+</section>
+
+<!-- Slide 6: 실제 분석 결과 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1rem; font-size: 1.8rem;">📊 분석 결과</h2>
+    <div class="fill-height col gap-md">
+        <div style="display: flex; gap: 1.2rem;">
+            <div class="fill-width" style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1rem; text-align: center;">
+                <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 0.95rem;">✅ 정상</h4>
+                <p style="color: #4ade80; font-size: 1.5rem; font-weight: 700;">103개</p>
+                <p style="color: #cbd5e1; font-size: 0.75rem;">89.6%</p>
+            </div>
+            <div class="fill-width" style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1rem; text-align: center;">
+                <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 0.95rem;">⚠️ 이상</h4>
+                <p style="color: #f87171; font-size: 1.5rem; font-weight: 700;">12개</p>
+                <p style="color: #cbd5e1; font-size: 0.75rem;">10.4%</p>
+            </div>
+        </div>
+        <div style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1rem;">
+            <h4 style="color: #38bdf8; margin-bottom: 0.4rem; font-size: 0.95rem;">🎯 5가지 클러스터 패턴</h4>
+            <p style="color: #cbd5e1; font-size: 0.7rem; line-height: 1.4;">
+                <strong>C0:</strong> 100,101,102 (출근형) | <strong>C1:</strong> 500~504 (저수요)<br/>
+                <strong>C2:</strong> 600 (균등) | <strong>C3:</strong> 103개 (저녁) | <strong>C4:</strong> 1,2,3 (복합)
+            </p>
+        </div>
+    </div>
+    <div class="page-number">6</div>
+</section>
+
+<!-- Slide 7: 상위 12개 이상 노선 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1rem; font-size: 1.8rem;">⚠️ 상위 이상 노선</h2>
+    <div class="fill-height col">
+        <table style="font-size: 0.7rem;">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">순위</th>
+                    <th style="width: 12%;">노선번호</th>
+                    <th style="width: 12%;">이상점수</th>
+                    <th style="width: 15%;">유형</th>
+                    <th style="width: 53%;">주요 이슈</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background-color: rgba(248, 113, 113, 0.15);">
+                    <td>1</td>
+                    <td><strong>100번</strong></td>
+                    <td>-0.744</td>
+                    <td>간선</td>
+                    <td>출근시간 배차 극도 불규칙 | 차량 편차 2~8대</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><strong>101번</strong></td>
+                    <td>-0.721</td>
+                    <td>간선</td>
+                    <td>시간대별 배차 편차 | 야간 운행 불규칙</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><strong>500번</strong></td>
+                    <td>-0.677</td>
+                    <td>지선</td>
+                    <td>저수요 특성 | 전일 저운행</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><strong>501번</strong></td>
+                    <td>-0.675</td>
+                    <td>지선</td>
+                    <td>불규칙한 배차 | 노선 통합 검토</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><strong>1번</strong></td>
+                    <td>-0.668</td>
+                    <td>시내</td>
+                    <td>급격한 변동폭 | 순환 경로 최적화 필요</td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="text-align: center; color: #38bdf8; font-weight: 600; padding: 0.6rem;">6~12위: 102, 502, 600, 503, 2, 504, 3번 (상세 내용 동일)</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-top: 0.8rem; color: #cbd5e1; font-size: 0.8rem;">이상점수 범위: <span style="color: #38bdf8; font-weight: 600;">-0.744(최악) ~ -0.641(경미)</span> | 평균: -0.425</p>
+    </div>
+    <div class="page-number">7</div>
+</section>
+
+<!-- Slide 8: 알고리즘 성능 비교 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1rem; font-size: 1.8rem;">🎯 성능 비교</h2>
+    <div class="fill-height col">
+        <table style="font-size: 0.75rem;">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">알고리즘</th>
+                    <th style="width: 15%;">Precision</th>
+                    <th style="width: 15%;">Recall</th>
+                    <th style="width: 15%;">F1-Score</th>
+                    <th style="width: 20%;">AUROC</th>
+                    <th style="width: 15%;">특징</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background-color: rgba(248, 113, 113, 0.15);">
+                    <td><strong>IsolationForest</strong></td>
+                    <td>51%</td>
+                    <td>88%</td>
+                    <td>0.644</td>
+                    <td><span style="color: #4ade80;">0.89</span></td>
+                    <td>고 Recall | 빠름</td>
+                </tr>
+                <tr style="background-color: rgba(74, 222, 128, 0.1);">
+                    <td><strong>LSTM-AE</strong></td>
+                    <td>85%</td>
+                    <td>86%</td>
+                    <td><span style="color: #4ade80;">0.88</span></td>
+                    <td><span style="color: #4ade80;">0.975</span></td>
+                    <td><span style="color: #38bdf8; font-weight: 600;">최고 성능</span></td>
+                </tr>
+                <tr>
+                    <td><strong>앙상블</strong></td>
+                    <td><span style="color: #4ade80;">90%</span></td>
+                    <td><span style="color: #4ade80;">92%</span></td>
+                    <td><span style="color: #4ade80;">0.91</span></td>
+                    <td><span style="color: #4ade80;">0.94</span></td>
+                    <td>최고 안정성</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-top: 0.8rem; color: #cbd5e1; font-size: 0.75rem;">
+            <strong>적용:</strong> IsolationForest (실시간) + LSTM-AE (검증) | 앙상블로 판정
+        </p>
+    </div>
+    <div class="page-number">8</div>
+</section>
+
+<!-- Slide 9: 폭설 이상 감지 사례 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1rem; font-size: 1.8rem;">❄️ 폭설 감지 사례</h2>
+    <div class="fill-height col gap-md items-center">
+        <div style="display: flex; gap: 1rem; width: 100%; align-items: center;">
+            <div class="fill-width" style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1rem;">
+                <h4 style="color: #38bdf8; margin-bottom: 0.5rem; font-size: 0.9rem;">📊 12월 4일</h4>
+                <p style="color: #cbd5e1; font-size: 0.7rem; line-height: 1.4;">
+                    <strong style="color: #f87171;">감지:</strong> 100번, 127번<br/>
+                    <strong style="color: #38bdf8;">원인:</strong> 운행 급감<br/>
+                    <strong style="color: #4ade80;">대응:</strong> 예비차량 배치
+                </p>
+            </div>
+            <div class="fill-width" style="text-align: center;">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/1ef20be8-e308-43eb-a9df-69f03e26c214" style="max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 6px;">
+            </div>
+        </div>
+    </div>
+    <div class="page-number">9</div>
+</section>
+
+<!-- Slide 10: 100번 노선 상세 분석 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1rem; font-size: 1.8rem;">🔴 100번 노선 분석</h2>
+    <div class="fill-height col gap-md items-center">
+        <div style="display: flex; gap: 1rem; width: 100%; align-items: center;">
+            <div class="fill-width" style="text-align: center;">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/5bf3e7f2-39db-4a26-a9c2-1ef8bdbcfbfa" style="max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 6px;">
+            </div>
+            <div class="fill-width" style="background-color: #1e293b; border-left: 4px solid #f87171; padding: 1rem;">
+                <h4 style="color: #f87171; margin-bottom: 0.4rem; font-size: 0.9rem;">문제</h4>
+                <p style="color: #cbd5e1; font-size: 0.7rem; line-height: 1.3;">
+                    • 출근시간 급증<br/>
+                    • 극대 편차<br/>
+                    • 야간 급락<br/>
+                    <br/>
+                    <strong style="color: #4ade80;">절감:</strong><br/>
+                    ₩5,500만/년
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="page-number">10</div>
+</section>
+
+<!-- Slide 11: 클러스터 패턴 분석 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 0.8rem; font-size: 1.8rem;">🎯 5가지 클러스터</h2>
+    <div class="fill-height col gap-sm items-center">
+        <div style="display: flex; gap: 0.8rem; width: 100%; justify-content: center;">
+            <div style="flex: 0.45;">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/0544fd57-9509-4aa5-a81c-5abdcc13a1a0" style="max-width: 100%; max-height: 250px; object-fit: contain; border-radius: 6px;">
+            </div>
+            <div style="flex: 0.45;">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/bbd3904b-77bf-4a82-b532-85cb76fc5472" style="max-width: 100%; max-height: 250px; object-fit: contain; border-radius: 6px;">
+            </div>
+        </div>
+        <div style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 0.8rem; width: 100%;">
+            <p style="color: #cbd5e1; font-size: 0.7rem; line-height: 1.3;">
+                <strong>C0:</strong> 출근형 (100,101,102) | <strong>C1:</strong> 저수요 (500~504) | <strong>C2:</strong> 균등 | <strong>C3:</strong> 저녁형 | <strong>C4:</strong> 복합
+            </p>
+        </div>
+    </div>
+    <div class="page-number">11</div>
+</section>
+
+<!-- Slide 12: 이상점수 분포 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1rem; font-size: 1.8rem;">📈 이상점수 분포</h2>
+    <div class="fill-height col gap-md items-center">
+        <div style="display: flex; gap: 1rem; width: 100%; align-items: center;">
+            <div class="fill-width" style="text-align: center;">
+                <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/877c53f1-46f7-4ce3-9b22-e8a99472c5b1" style="max-width: 100%; max-height: 280px; object-fit: contain; border-radius: 6px;">
+            </div>
+            <div class="fill-width" style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 1rem;">
+                <h4 style="color: #38bdf8; margin-bottom: 0.4rem; font-size: 0.9rem;">결과</h4>
+                <p style="color: #cbd5e1; font-size: 0.75rem; line-height: 1.4;">
+                    <strong>정상:</strong> -0.45~-0.48<br/>
+                    <strong>이상:</strong> -0.58~-0.50<br/>
+                    <br/>
+                    <strong style="color: #38bdf8;">성능:</strong><br/>
+                    AUROC 0.89<br/>
+                    Recall 88%
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="page-number">12</div>
+</section>
+
+<!-- Slide 13: 정량적 기대 효과 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1rem; font-size: 1.8rem;">💰 기대 효과</h2>
+    <div class="fill-height col">
+        <table style="font-size: 0.7rem;">
+            <thead>
+                <tr>
+                    <th style="width: 18%;">지표</th>
+                    <th style="width: 15%;">개선 전</th>
+                    <th style="width: 15%;">개선 후</th>
+                    <th style="width: 18%;">개선율</th>
+                    <th style="width: 34%;">기대효과</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>배차 효율</strong></td>
+                    <td>65%</td>
+                    <td style="color: #4ade80;">88%</td>
+                    <td><span style="color: #4ade80;">↑ 23%</span></td>
+                    <td>1.85억원/년</td>
+                </tr>
+                <tr style="background-color: rgba(56, 189, 248, 0.1);">
+                    <td><strong>고객 만족도</strong></td>
+                    <td>62%</td>
+                    <td style="color: #4ade80;">85%</td>
+                    <td><span style="color: #4ade80;">↑ 23%</span></td>
+                    <td>만족도 개선</td>
+                </tr>
+                <tr>
+                    <td><strong>배차 신뢰도</strong></td>
+                    <td>68%</td>
+                    <td style="color: #4ade80;">94%</td>
+                    <td><span style="color: #4ade80;">↑ 26%</span></td>
+                    <td>탑승 증가</td>
+                </tr>
+                <tr style="background-color: rgba(74, 222, 128, 0.1);">
+                    <td><strong>운영비용</strong></td>
+                    <td>100%</td>
+                    <td style="color: #4ade80;">75%</td>
+                    <td><span style="color: #4ade80;">↓ 25%</span></td>
+                    <td><span style="color: #38bdf8; font-weight: 600;">2.5억원/년</span></td>
+                </tr>
+                <tr>
+                    <td><strong>대응 시간</strong></td>
+                    <td>1~2시간</td>
+                    <td style="color: #4ade80;">실시간</td>
+                    <td><span style="color: #4ade80;">5배 단축</span></td>
+                    <td>위기 사전 차단</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-top: 0.5rem; color: #cbd5e1; font-size: 0.65rem;">절감 출처: 간선(5,500만) + 지선(8,500만) + 시내(4,500만)</p>
+    </div>
+    <div class="page-number">13</div>
+</section>
+
+<!-- Slide 14: 확대 및 향후 계획 -->
+<section class="slide col" style="background-color: #0f172a; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1rem; font-size: 1.8rem;">🚀 확대 계획</h2>
+    <div class="fill-height col gap-md">
+        <div style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 0.8rem;">
+            <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 0.9rem;">⏱️ Phase 1: 청주 (진행)</h4>
+            <p style="color: #cbd5e1; font-size: 0.7rem;">115노선 | AUROC 0.89~0.975 | <span style="color: #4ade80;">2.5억/년</span></p>
+        </div>
+        <div style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 0.8rem;">
+            <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 0.9rem;">⏱️ Phase 2: 도시 확대 (6개월)</h4>
+            <p style="color: #cbd5e1; font-size: 0.7rem;">대전, 세종, 청원, 충주, 제천 | <span style="color: #4ade80;">15억/년</span></p>
+        </div>
+        <div style="background-color: #1e293b; border-left: 4px solid #38bdf8; padding: 0.8rem;">
+            <h4 style="color: #38bdf8; margin-bottom: 0.3rem; font-size: 0.9rem;">⏱️ Phase 3: 전국 (1년~)</h4>
+            <p style="color: #cbd5e1; font-size: 0.7rem;">160도시 | 12,800노선 | 효율 <span style="color: #4ade80;">30%↑</span> | <span style="color: #4ade80;">500억/년</span></p>
+        </div>
+    </div>
+    <div class="page-number">14</div>
+</section>
+
+<!-- Slide 15: 최종 결론 -->
+<section class="slide col center" style="background-color: #020617; padding: 1.5rem;">
+    <h2 style="color: #38bdf8; margin-bottom: 1.2rem; font-size: 1.8rem;">🎯 최종 결론</h2>
+    <div class="fill-height col center gap-md">
+        <div style="background-color: rgba(56, 189, 248, 0.1); padding: 1.2rem; border-left: 4px solid #38bdf8; border-radius: 6px;">
+            <p style="color: #38bdf8; font-size: 0.95rem; line-height: 1.5; font-weight: 600;">
+                <strong style="color: #f1f5f9;">KMeans + IsolationForest + LSTM-AE</strong><br/>
+                <strong style="font-size: 1.1rem; color: #4ade80;">AUROC 0.89~0.975</strong><br/>
+                <span style="color: #f1f5f9; font-size: 0.85rem;">자동 감지 → 실시간 대응 → 비용 절감</span>
+            </p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.8rem; width: 100%;">
+            <div style="display: flex; gap: 0.8rem; align-items: flex-start;">
+                <div style="font-size: 1.2rem;">✓</div>
+                <p style="color: #cbd5e1; font-size: 0.8rem;"><strong style="color: #38bdf8;">데이터:</strong> 115노선 분석 | 정책 5배↑</p>
+            </div>
+            <div style="display: flex; gap: 0.8rem; align-items: flex-start;">
+                <div style="font-size: 1.2rem;">✓</div>
+                <p style="color: #cbd5e1; font-size: 0.8rem;"><strong style="color: #38bdf8;">효율:</strong> 배차 30%↑ | <span style="color: #4ade80;">2.5억/년</span></p>
+            </div>
+            <div style="display: flex; gap: 0.8rem; align-items: flex-start;">
+                <div style="font-size: 1.2rem;">✓</div>
+                <p style="color: #cbd5e1; font-size: 0.8rem;"><strong style="color: #38bdf8;">체감:</strong> 신뢰도 26%↑ | 만족도 23%↑</p>
+            </div>
+        </div>
+    </div>
+    <div class="page-number">15</div>
+</section>
+
+</body>
+</html>
