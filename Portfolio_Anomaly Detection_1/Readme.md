@@ -1,5 +1,5 @@
 Portfolio: 이상 탐지 (Anomaly Detection)
-[![GitHub stars](https://img.shields.io/github/stars/songgongho/Portfolio_AnomalyDetectionhttps://github.com/songgongho/Portfolio_Anhttps://img.shields.io/github/license/songgongho/Portfolio_AnomalyDetection![Jupyter](https://img.shields.io/badge/Jupyter-Note산업 AI 석사 과정 포트폴리오 프로젝트 - 클래스 불균형, Isolation Forest, AutoEncoder를 활용한 반도체 제조 공정 이상 탐지. 스마트 팩토리 MES 데이터 기반 비지도 학습 적용.
+클래스 불균형, Isolation Forest, AutoEncoder를 활용한 반도체 제조 공정 이상 탐지. 스마트 팩토리 MES 데이터 기반 비지도 학습 적용.
 ​
 
 📋 목차
