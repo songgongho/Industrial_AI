@@ -356,7 +356,7 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
 ## 📞 연락처 (Contact)
 
 - **GitHub**: [songgongho](https://github.com/songgongho)
-- **Email**: [이메일 주소]
+- **Email**: [song5@kakao.com]
 
 <br>
 
