@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic Survival Prediction - 결과 보고서</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .reveal h1, .reveal h2, .reveal h3 {
+            text-transform: none;
+            font-weight: bold;
+        }
+        .reveal {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .reveal pre {
+            width: 100%;
+            font-size: 0.55em;
+        }
+        .title-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            font-size: 0.8em;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #667eea;
+            color: white;
+        }
+        .highlight {
+            background-color: #ffd700;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+        .bullet-point {
+            text-align: left;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+        .footer {
+            font-size: 0.6em;
+            color: #999;
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: 타이틀 -->
+            <section class="title-slide">
+                <h1>🚢 Titanic Survival Prediction</h1>
+                <h3>머신러닝을 이용한 탑승객 생존 예측</h3>
+                <p style="margin-top: 50px;">
+                    <strong>Kaggle Competition</strong><br>
+                    정확도: <span class="highlight">0.77033 (상위 30%)</span>
+                </p>
+                <p style="font-size: 0.7em; margin-top: 80px; color: #aaa;">
+                    December 2025
+                </p>
+            </section>
+
+            <!-- SLIDE 2: 프로젝트 개요 -->
+            <section>
+                <h2>📌 프로젝트 개요</h2>
+                <div class="bullet-point">
+                    <p>✓ <strong>목표</strong>: 타이타닉 탑승객의 신상 정보로부터 생존 여부 예측</p>
+                    <p>✓ <strong>데이터 크기</strong>: Train 891명, Test 418명</p>
+                    <p>✓ <strong>문제 유형</strong>: 이진 분류 (Binary Classification)</p>
+                    <p>✓ <strong>기술 스택</strong>: Python, Pandas, Scikit-learn, Matplotlib</p>
+                    <p>✓ <strong>최종 모델</strong>: Support Vector Machine (SVM)</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: 데이터 분석 -->
+            <section>
+                <h2>📊 데이터 탐색적 분석 (EDA)</h2>
+                <table>
+                    <tr>
+                        <th>구분</th>
+                        <th>사망 (0)</th>
+                        <th>생존 (1)</th>
+                    </tr>
+                    <tr>
+                        <td>샘플 수</td>
+                        <td>549명</td>
+                        <td>342명</td>
+                    </tr>
+                    <tr>
+                        <td>비율</td>
+                        <td>61.6%</td>
+                        <td><span class="highlight">38.4%</span></td>
+                    </tr>
+                </table>
+                <p style="margin-top: 30px; font-size: 0.85em;">
+                    <strong>주요 발견:</strong><br>
+                    • 성별(Sex): 여성 74.2% vs 남성 18.9% (상관계수: -0.54)<br>
+                    • 객실 등급: 1등급 62.9% > 2등급 47.3% > 3등급 24.2%<br>
+                    • 운임(Fare): 높을수록 생존율 증가
+                </p>
+            </section>
+
+            <!-- SLIDE 4: 피처 엔지니어링 -->
+            <section>
+                <h2>🔧 피처 엔지니어링</h2>
+                <table>
+                    <tr>
+                        <th>파생 변수</th>
+                        <th>처리 방법</th>
+                    </tr>
+                    <tr>
+                        <td><strong>AgeGroup</strong></td>
+                        <td>나이를 10세 단위로 구간화</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Title</strong></td>
+                        <td>이름에서 호칭 추출 (Mr/Mrs/Miss)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cabin</strong></td>
+                        <td>객실의 첫 글자(Deck) 추출</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FamilySize</strong></td>
+                        <td>SibSp + Parch + 1</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fare</strong></td>
+                        <td>4분위수로 범주화</td>
+                    </tr>
+                </table>
+                <p style="margin-top: 20px; font-size: 0.8em; color: #ffd700;">
+                    ⭐ 결과: 원본 12개 피처 → 최종 9개 피처 (PassengerId, Ticket 제거)
+                </p>
+            </section>
+
+            <!-- SLIDE 5: 모델 비교 -->
+            <section>
+                <h2>⚙️ 모델 성능 비교</h2>
+                <p style="font-size: 0.75em; margin-bottom: 20px;">
+                    <strong>5-Fold Stratified Cross Validation 결과</strong>
+                </p>
+                <table>
+                    <tr>
+                        <th>모델</th>
+                        <th>Train Accuracy</th>
+                        <th>Test Accuracy</th>
+                        <th>선택 이유</th>
+                    </tr>
+                    <tr>
+                        <td>KNN</td>
+                        <td>84.5%</td>
+                        <td>79.6%</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Decision Tree</td>
+                        <td>92.0%</td>
+                        <td>81.3%</td>
+                        <td>과적합</td>
+                    </tr>
+                    <tr>
+                        <td>Random Forest</td>
+                        <td>90.3%</td>
+                        <td>81.3%</td>
+                        <td>Feature Importance 분석</td>
+                    </tr>
+                    <tr style="background-color: #2c3e50;">
+                        <td><strong>SVM</strong></td>
+                        <td><strong>83.6%</strong></td>
+                        <td><strong style="color: #ffd700;">82.9%</strong></td>
+                        <td><span class="highlight">최고 성능</span></td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- SLIDE 6: SVM 선정 이유 -->
+            <section>
+                <h2>🎯 최종 모델 선정: SVM</h2>
+                <div class="bullet-point">
+                    <p>✓ <strong>최고 검증 정확도</strong>: 82.9%</p>
+                    <p>✓ <strong>과적합 최소화</strong>: Train-Test 차이 0.7% (안정적)</p>
+                    <p>✓ <strong>일반화 성능</strong>: 새로운 데이터에 강함</p>
+                    <p>✓ <strong>복잡한 결정 경계</strong>: 비선형 데이터에 효과적</p>
+                </div>
+                <p style="margin-top: 50px; font-size: 0.85em; text-align: center; color: #ffd700;">
+                    <strong>Kaggle 제출 정확도: 0.77033</strong><br>
+                    (상위 30% 달성)
+                </p>
+            </section>
+
+            <!-- SLIDE 7: Feature Importance -->
+            <section>
+                <h2>📈 Feature Importance 분석</h2>
+                <p style="font-size: 0.75em; margin-bottom: 20px;">
+                    <strong>Random Forest 모델 기반</strong>
+                </p>
+                <table style="font-size: 0.75em;">
+                    <tr>
+                        <th>순위</th>
+                        <th>Feature</th>
+                        <th>중요도</th>
+                        <th>Insight</th>
+                    </tr>
+                    <tr>
+                        <td>1️⃣</td>
+                        <td><span class="highlight">Sex (성별)</span></td>
+                        <td>최고</td>
+                        <td>가장 강한 예측 변수</td>
+                    </tr>
+                    <tr>
+                        <td>2️⃣</td>
+                        <td>Pclass (객실 등급)</td>
+                        <td>높음</td>
+                        <td>사회경제적 지위 반영</td>
+                    </tr>
+                    <tr>
+                        <td>3️⃣</td>
+                        <td>Fare (운임)</td>
+                        <td>높음</td>
+                        <td>Pclass와 높은 상관성</td>
+                    </tr>
+                    <tr>
+                        <td>4️⃣</td>
+                        <td>AgeGroup (나이대)</td>
+                        <td>중간</td>
+                        <td>아이와 노인 우대</td>
+                    </tr>
+                    <tr>
+                        <td>5️⃣</td>
+                        <td>FamilySize (가족 크기)</td>
+                        <td>중간</td>
+                        <td>집단 효과 분석</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- SLIDE 8: 구현 프로세스 -->
+            <section>
+                <h2>🔄 구현 프로세스</h2>
+                <div style="display: flex; justify-content: space-around; margin-top: 50px;">
+                    <div style="text-align: center; flex: 1;">
+                        <h4 style="color: #667eea; font-size: 1.2em;">1️⃣</h4>
+                        <p><strong>데이터 로드</strong><br>& 결측치 처리</p>
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <h4 style="color: #667eea; font-size: 1.2em;">2️⃣</h4>
+                        <p><strong>탐색적<br>데이터 분석</strong></p>
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <h4 style="color: #667eea; font-size: 1.2em;">3️⃣</h4>
+                        <p><strong>피처<br>엔지니어링</strong></p>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-around; margin-top: 50px;">
+                    <div style="text-align: center; flex: 1;">
+                        <h4 style="color: #764ba2; font-size: 1.2em;">4️⃣</h4>
+                        <p><strong>모델<br>비교 평가</strong></p>
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <h4 style="color: #764ba2; font-size: 1.2em;">5️⃣</h4>
+                        <p><strong>최적 모델<br>선정</strong></p>
+                    </div>
+                    <div style="text-align: center; flex: 1;">
+                        <h4 style="color: #764ba2; font-size: 1.2em;">6️⃣</h4>
+                        <p><strong>결과<br>제출</strong></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: 핵심 인사이트 -->
+            <section>
+                <h2>💡 핵심 인사이트</h2>
+                <div class="bullet-point" style="margin-top: 40px;">
+                    <p>🔹 <strong>여성과 아이 우대 정책</strong>: 성별이 생존율의 가장 큰 결정 요인</p>
+                    <p>🔹 <strong>상층부 탈출 우위</strong>: 1등급 승객의 생존율이 3배 이상 높음</p>
+                    <p>🔹 <strong>경제 계층의 중요성</strong>: Pclass와 Fare가 강한 예측 변수</p>
+                    <p>🔹 <strong>피처 엔지니어링 효과</strong>: Title, AgeGroup 파생 변수로 모델 성능 향상</p>
+                    <p>🔹 <strong>과적합 회피</strong>: 교차 검증을 통해 일반화 성능 높은 SVM 선정</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: 결론 및 개선 방안 -->
+            <section>
+                <h2>🎓 결론 및 개선 방안</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+                    <div style="text-align: left;">
+                        <h4 style="color: #ffd700;">✅ 강점</h4>
+                        <p style="font-size: 0.85em;">• 체계적 ML 파이프라인</p>
+                        <p style="font-size: 0.85em;">• 다중 모델 비교 분석</p>
+                        <p style="font-size: 0.85em;">• 상세한 EDA & 가시화</p>
+                        <p style="font-size: 0.85em;">• 논리적 피처 엔지니어링</p>
+                    </div>
+                    <div style="text-align: left;">
+                        <h4 style="color: #ffd700;">🚀 개선 방향</h4>
+                        <p style="font-size: 0.85em;">• 하이퍼파라미터 튜닝 (GridSearchCV)</p>
+                        <p style="font-size: 0.85em;">• 앙상블 모델 (VotingClassifier)</p>
+                        <p style="font-size: 0.85em;">• Ticket 패턴 분석</p>
+                        <p style="font-size: 0.85em;">• IsAlone 변수 추가</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 11: 최종 슬라이드 -->
+            <section class="title-slide">
+                <h1>🎉 Thank You!</h1>
+                <p style="margin-top: 80px;">
+                    <strong>Titanic Survival Prediction</strong><br>
+                    Machine Learning Competition
+                </p>
+                <p style="margin-top: 60px; font-size: 0.85em;">
+                    📊 정확도: <span class="highlight">0.77033</span><br>
+                    📈 순위: 상위 30%
+                </p>
+                <p style="font-size: 0.7em; margin-top: 80px; color: #aaa;">
+                    GitHub | Kaggle | LinkedIn
+                </p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            transitionSpeed: 'default',
+            controls: true,
+            progress: true,
+            center: true,
+            touch: true
+        });
+    </script>
+</body>
+</html>
