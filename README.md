@@ -168,7 +168,7 @@ TensorFlow/Keras를 활용하여 신경망의 기초부터 고급 최적화 기�
     - 모델 비교 및 선택 기준 학습
 
 
-* **[➡️ 최종 결과 보고서]([https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_Titanic_Survival_Prediction/Titanic%20Survival%20Prediction%20-%20%EA%B2%B0%EA%B3%BC%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf))**
+* **[➡️ 최종 결과 보고서]([https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_Titanic_Survival_Prediction/titanic_report_%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C.html]))**
 
 <br>
 
