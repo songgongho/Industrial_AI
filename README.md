@@ -163,7 +163,7 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
 * **결과 요약**:
     단순한 필터 적용을 넘어, 영상의 수치적 특성 분석과 동적 파라미터 튜닝을 통해 산업 현장의 비전 검사 시스템 구축을 위한 핵심 역량을 확보하였습니다
 
-* **[➡️ 최종 결과](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio-OpenCV/docs/OPENCV_REPORT.md](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio-OpenCV/results))**
+* **[➡️ 최종 결과]([https://github.com/songgongho/Industrial_AI/blob/main/Portfolio-OpenCV/docs/OPENCV_REPORT.md](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio-OpenCV/results)](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio-OpenCV/results))**
 
 <br>
 
