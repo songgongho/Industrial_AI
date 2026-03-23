@@ -57,12 +57,14 @@ def safe_close_windows() -> None:
 def main() -> None:
     """이미지 로드 -> 색 공간 변환 -> 채널 분리/표시 흐름을 제어합니다."""
     parser = argparse.ArgumentParser(description="OpenCV 리팩터링 예제: 함수화 + main 제어")
-    parser.add_argument("--input", default="Lenna.png", help="입력 이미지 파일명")
+    parser.add_argument("--input", default="lenna.png", help="입력 이미지 파일명 (data 폴더 기준)")
     parser.add_argument("--no-gui", action="store_true", help="창 표시 없이 콘솔 출력만 수행")
     args = parser.parse_args()
 
-    base_dir = Path(__file__).resolve().parent
-    image_path = base_dir / args.input
+    base_dir = Path(__file__).resolve().parent.parent
+    image_path = base_dir / "data" / args.input
+    results_dir = base_dir / "results"
+    results_dir.mkdir(exist_ok=True)
 
     try:
         # 1) 원본 이미지 로드
@@ -84,6 +86,23 @@ def main() -> None:
             print(f"[INFO] BGR shape={bgr.shape}, GRAY shape={gray.shape}")
             print(f"[INFO] HSV shape={hsv.shape}, YUV shape={yuv.shape}")
             print(f"[INFO] B[0,0]={int(b[0,0])}, H[0,0]={int(h[0,0])}, Y[0,0]={int(y[0,0])}")
+
+        # 변환 결과를 results 폴더에 저장합니다.
+        cv2.imwrite(str(results_dir / "ex5_gray.png"), gray)
+        cv2.imwrite(str(results_dir / "ex5_hsv.png"), hsv)
+        cv2.imwrite(str(results_dir / "ex5_yuv.png"), yuv)
+        cv2.imwrite(str(results_dir / "ex5_b_channel.png"), b)
+        cv2.imwrite(str(results_dir / "ex5_g_channel.png"), g)
+        cv2.imwrite(str(results_dir / "ex5_r_channel.png"), r)
+        cv2.imwrite(str(results_dir / "ex5_h_channel.png"), h)
+        cv2.imwrite(str(results_dir / "ex5_s_channel.png"), s)
+        cv2.imwrite(str(results_dir / "ex5_v_channel.png"), v)
+        cv2.imwrite(str(results_dir / "ex5_y_channel.png"), y)
+        cv2.imwrite(str(results_dir / "ex5_u_channel.png"), u)
+        cv2.imwrite(str(results_dir / "ex5_v_yuv_channel.png"), v_yuv)
+        print(f"[INFO] 결과 저장 완료: {results_dir}")
+
+        if args.no_gui:
             return
 
         # 4) 변환 결과와 채널을 창으로 표시
