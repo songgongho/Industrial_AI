@@ -16,8 +16,11 @@ def main() -> None:
     parser.add_argument("--no-gui", action="store_true", help="창 표시 없이 콘솔 출력만 수행합니다.")
     args = parser.parse_args()
 
-    # 실행 파일 기준 경로에서 Lenna.png를 찾습니다.
-    image_path = Path(__file__).resolve().parent / "Lenna.png"
+    # 실행 파일 기준으로 data 폴더에서 이미지를 읽습니다.
+    base_dir = Path(__file__).resolve().parent.parent
+    image_path = base_dir / "data" / "lenna.png"
+    results_dir = base_dir / "results"
+    results_dir.mkdir(exist_ok=True)
     image = cv2.imread(str(image_path))
 
     # 이미지 로딩 실패 시 메시지를 출력하고 프로그램을 종료합니다.
@@ -37,6 +40,16 @@ def main() -> None:
     print_top_left_5x5("Hue Channel", hue)
     print_top_left_5x5("Saturation Channel", saturation)
     print_top_left_5x5("Value Channel", value)
+
+    # BGR 채널 및 HSV 이미지를 results 폴더에 저장합니다.
+    cv2.imwrite(str(results_dir / "ex1_blue_channel.png"), blue)
+    cv2.imwrite(str(results_dir / "ex1_green_channel.png"), green)
+    cv2.imwrite(str(results_dir / "ex1_red_channel.png"), red)
+    cv2.imwrite(str(results_dir / "ex1_hsv_image.png"), hsv_image)
+    cv2.imwrite(str(results_dir / "ex1_hue_channel.png"), hue)
+    cv2.imwrite(str(results_dir / "ex1_saturation_channel.png"), saturation)
+    cv2.imwrite(str(results_dir / "ex1_value_channel.png"), value)
+    print(f"[INFO] 결과 저장 완료: {results_dir}")
 
     if args.no_gui:
         return

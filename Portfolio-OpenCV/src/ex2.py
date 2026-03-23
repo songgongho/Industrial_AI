@@ -8,15 +8,16 @@ import cv2
 def main() -> None:
     """Lenna 이미지를 그레이스케일로 변환하고 저장하는 예제입니다."""
     parser = argparse.ArgumentParser(description="Lenna BGR -> Gray 변환 및 저장")
-    parser.add_argument("--input", default="Lenna.png", help="입력 이미지 파일명")
+    parser.add_argument("--input", default="lenna.png", help="입력 이미지 파일명 (data 폴더 기준)")
     parser.add_argument("--output", default="Lenna_gray.png", help="저장할 그레이스케일 파일명")
     parser.add_argument("--no-gui", action="store_true", help="창 표시 없이 저장/검증만 수행")
     args = parser.parse_args()
 
-    # 현재 스크립트 위치를 기준으로 입력/출력 경로를 고정하면 실행 위치가 달라도 안정적입니다.
-    base_dir = Path(__file__).resolve().parent
-    input_path = base_dir / args.input
-    output_path = base_dir / args.output
+    # 현재 스크립트 위치를 기준으로 data/results 경로를 설정합니다.
+    base_dir = Path(__file__).resolve().parent.parent
+    input_path = base_dir / "data" / args.input
+    output_path = base_dir / "results" / args.output
+    (base_dir / "results").mkdir(exist_ok=True)
 
     # 1) 컬러(BGR)로 이미지를 읽습니다.
     color_img = cv2.imread(str(input_path), cv2.IMREAD_COLOR)

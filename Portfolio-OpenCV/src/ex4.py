@@ -13,7 +13,7 @@ def on_trackbar(_value: int) -> None:
 def main() -> None:
     """트랙바로 임계값을 조절하며 이진화 결과를 실시간 확인하는 예제입니다."""
     parser = argparse.ArgumentParser(description="트랙바 기반 이진화 데모")
-    parser.add_argument("--input", default="Lenna.png", help="입력 이미지 파일명")
+    parser.add_argument("--input", default="lenna.png", help="입력 이미지 파일명 (data 폴더 기준)")
     parser.add_argument(
         "--self-check",
         action="store_true",
@@ -21,8 +21,10 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    base_dir = Path(__file__).resolve().parent
-    input_path = base_dir / args.input
+    base_dir = Path(__file__).resolve().parent.parent
+    input_path = base_dir / "data" / args.input
+    results_dir = base_dir / "results"
+    results_dir.mkdir(exist_ok=True)
 
     # 1) 이미지를 그레이스케일로 읽습니다.
     gray = cv2.imread(str(input_path), cv2.IMREAD_GRAYSCALE)
@@ -34,6 +36,8 @@ def main() -> None:
         _, binary = cv2.threshold(gray, 128, 255, cv2.THRESH_BINARY)
         white_pixels = int((binary == 255).sum())
         print(f"[SELF-CHECK] binary shape={binary.shape}, white_pixels={white_pixels}")
+        cv2.imwrite(str(results_dir / "ex4_binary_thresh128.png"), binary)
+        print(f"[INFO] 결과 저장 완료: {results_dir}")
         return
 
     window_name = "Threshold Demo"
@@ -53,7 +57,11 @@ def main() -> None:
         if key == ord("q"):
             break
 
-    # 5) 열린 모든 창을 닫아 자원을 정리합니다.
+    # 5) 마지막 이진화 결과를 results 폴더에 저장합니다.
+    cv2.imwrite(str(results_dir / "ex4_binary_final.png"), binary)
+    print(f"[INFO] 결과 저장 완료: {results_dir}")
+
+    # 6) 열린 모든 창을 닫아 자원을 정리합니다.
     cv2.destroyAllWindows()
 
 
