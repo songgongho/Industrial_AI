@@ -1,8 +1,13 @@
+프로젝트 링크들의 구조적 오류(중복된 경로, 잘못된 폴더명 등)를 모두 수정하고 OpenCV 프로젝트의 실제 경로(`Portfolio-OpenCV`)를 반영하여 전체 포트폴리오를 재구성했습니다
+
+요청하신 문서 작성 가이드(개조식 구성, 문장 끝 온점 생략)를 철저히 적용하여 아래와 같이 제공합니다
+
+---
 
 # 📈 Industrial AI Projects Portfolio (AI-Ex 포트폴리오)
 
 안녕하세요! 산업 인공지능 분야의 문제 해결을 목표로 다양한 프로젝트를 진행하고 있는 송공호입니다
-현재(2026.03 기준) 충북대학교 산업인공지능학과에 재학중입니다
+현재(2026년 03월 기준) 충북대학교 산업인공지능학과에 재학중입니다
 
 Industrial_AI 레퍼지토리는 관련 포트폴리오를 정리하여 업로드 합니다
 
@@ -109,7 +114,7 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
 
 * **프로젝트 링크**: [**Portfolio-DeepLearning-Fundamentals**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio-DeepLearning-Fundamentals)
 * **주요 내용**: MSE/MAE 손실함수 비교, 이진/다중 분류 구현, Residual Network 및 정규화 기법 최적화
-* **[➡️ 최종 결과 보고서](https://github.com/songgongho/Industrial_AI/blob/Portfolio-DeepLearning-Fundamentals/blob/main/FINAL_REPORT.md)**
+* **[➡️ 최종 결과 보고서](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio-DeepLearning-Fundamentals/FINAL_REPORT.md)**
 
 <br>
 
@@ -131,7 +136,7 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
 
 ### 8. 🚌 청주 버스 이상 탐지 (Cheongju Bus Anomaly Detection)
 
-* **프로젝트 링크**: [**Portfolio_Cheongju-bus-anomaly-detection**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_Cheongju_bus_anomaly_detection_project)
+* **프로젝트 링크**: [**Portfolio_Cheongju_bus_anomaly_detection_project**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_Cheongju_bus_anomaly_detection_project)
 * **주요 내용**: 실시간 공공 API 데이터 수집, Isolation Forest 및 Autoencoder 기반 이상 탐지
 * **[➡️ 최종 결과 보고서](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_Cheongju_bus_anomaly_detection_project/report/%EC%B2%AD%EC%A3%BC%20%EB%B2%84%EC%8A%A4%20%EC%9D%B4%EC%83%81%20%EA%B0%90%EC%A7%80%20%EC%8B%9C%EC%8A%A4%ED%85%9C_2025254010_%EC%86%A1%EA%B3%B5%ED%98%B8.html)**
 
@@ -149,20 +154,16 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
 
 **컴퓨터 비전 기초부터 인터랙티브 파라미터 최적화까지의 영상 처리 프로세스 구현**
 
-
-
-* **프로젝트 링크**: [**Portfolio_OpenCV_Advanced_Practice**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio_OpenCV_Advanced_Practice)
-
+* **프로젝트 링크**: [**Portfolio-OpenCV**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio-OpenCV)
 * **주요 실습 내용**:
     * **Ex 01/03/05 (Color Analysis)**: BGR, HSV, YUV 색 공간 변환 및 휘도(Y) 채널 통계 분석을 통한 조명 강건성 확보
     * **Ex 02 (Preprocessing)**: 효율적인 연산을 위한 Grayscale 변환 및 데이터 입출력 최적화
     * **Ex 04 (Interactive Tuning)**: 트랙바(Trackbar) GUI를 활용한 실시간 이진화(Thresholding) 임계값 탐색기 구현
     * **시스템 설계**: `argparse` 모듈을 통한 GUI/CLI 실행 모드 지원 및 예외 처리 로직 적용
-
 * **결과 요약**:
     단순한 필터 적용을 넘어, 영상의 수치적 특성 분석과 동적 파라미터 튜닝을 통해 산업 현장의 비전 검사 시스템 구축을 위한 핵심 역량을 확보하였습니다
 
-* **[➡️ 최종 결과 보고서](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio_OpenCV_Advanced_Practice/docs/OPENCV_REPORT.md)**
+* **[➡️ 최종 결과 보고서](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio-OpenCV/docs/OPENCV_REPORT.md)**
 
 <br>
 
@@ -258,5 +259,3 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
 
 **마지막 업데이트**: 2026년 03월
 **포트폴리오 상태**: 🟢 활발히 업데이트 중
-
----
