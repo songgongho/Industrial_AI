@@ -1,58 +1,77 @@
-ex1.py: BGR 및 HSV 채널 분리 분석
-주요 기능: 이미지의 기본 색상 체계인 BGR과 조명 변화에 강한 HSV 색 공간의 채널별 데이터 구조 확인
+🛠 주요 실습 소스 상세 설명 (Detailed Implementation)
+각 실습 파일은 OpenCV의 핵심 기능을 단계별로 구현하고 있으며, argparse를 통해 GUI 모드와 콘솔 모드를 선택적으로 실행할 수 있도록 설계되었습니다.
 
-처리 절차
+📂 Ex 01. BGR & HSV 채널 분리 및 분석
+"디지털 영상의 데이터 구조를 수치적으로 이해하는 기초 단계"
 
-Lenna.png 파일을 BGR 컬러 모드로 로드
+Key Functions: cv2.split(), cv2.cvtColor()
 
-cv2.split() 함수를 사용하여 Blue, Green, Red 채널을 각각 분리
+Description:
 
-BGR 이미지를 HSV(Hue, Saturation, Value) 색 공간으로 변환 후 채널 분리
+Lenna.png를 로드하여 기본 색상 체계인 BGR 채널을 각각 분리
 
-각 채널의 좌상단 5x5 행렬 값을 콘솔에 출력하여 픽셀 데이터의 수치적 구성 확인
+조명 변화에 강인한 HSV(Hue, Saturation, Value) 색 공간으로 변환 후 채널별 특성 파악
 
-ex2.py: 그레이스케일 변환 및 이미지 저장
-주요 기능: 컬러 영상을 단일 채널의 회색조(Grayscale) 영상으로 변환하고 파일로 저장
+각 채널의 좌상단 5x5 행렬 값을 출력하여 픽셀의 정수 데이터 구조를 직접 확인
 
-처리 절차
+📂 Ex 02. 그레이스케일 변환 및 데이터 저장
+"데이터 경량화 및 전처리를 위한 필수 변환 공정"
 
-입력 받은 BGR 이미지를 cv2.cvtColor()의 COLOR_BGR2GRAY 플래그를 사용하여 변환
+Key Functions: cv2.cvtColor(COLOR_BGR2GRAY), cv2.imwrite()
 
-변환된 데이터를 cv2.imwrite()를 통해 Lenna_gray.png로 저장
+Description:
 
-원본(컬러)과 결과(회색조) 이미지의 채널 수 차이를 비교하여 데이터 경량화 확인
+3채널 컬러 영상을 1채널 Grayscale 영상으로 변환하여 연산 효율성 증대
 
-ex3.py: YUV 색 공간 변환 및 휘도 분석
-주요 기능: 영상 전송 및 압축에 주로 사용되는 YUV 색 공간 이해
+변환된 영상을 Lenna_gray.png로 로컬에 저장하는 파일 입출력 프로세스 구축
 
-처리 절차
+원본 대비 데이터 크기 변화 및 채널 삭제에 따른 시각적 변화 분석
 
-BGR 이미지를 YUV(휘도 및 색차 정보) 색 공간으로 변환
+📂 Ex 03. YUV 색 공간 변환 및 휘도 통계 분석
+"영상 전송 및 압축 표준인 YUV 체계의 이해"
 
-Y(Luma), U(Chroma B), V(Chroma R) 채널로 분리
+Key Functions: cv2.cvtColor(COLOR_BGR2YUV), np.mean(), np.std()
 
-Y(휘도) 채널의 평균값 및 표준편차 등의 통계 정보를 계산하여 영상의 전체적인 밝기 특성 분석
+Description:
 
-ex4.py: 트랙바를 활용한 실시간 이진화(Thresholding)
-주요 기능: 사용자의 입력에 따라 실시간으로 이미지 임계값 처리 결과를 확인
+밝기 정보(Y)와 색차 정보(U, V)가 분리된 YUV 색 공간 적용
 
-처리 절차
+Y(휘도) 채널의 평균값과 표준편차를 계산하여 영상의 전체적인 밝기 분포를 수치화
 
-이미지를 Grayscale로 로드한 후 전용 GUI 윈도우 생성
+인간의 시각이 밝기에 더 민감하다는 특성을 데이터 통계로 검증
 
-cv2.createTrackbar()를 사용하여 0~255 범위의 임계값 조절 바 구현
+📂 Ex 04. 트랙바 기반 실시간 이진화(Thresholding)
+"동적 파라미터 튜닝을 통한 최적의 임계값 도출"
 
-설정된 임계값에 따라 픽셀을 0(검은색) 또는 255(흰색)로 분류하는 cv2.threshold() 처리 실시간 렌더링
+Key Functions: cv2.createTrackbar(), cv2.threshold()
 
-ex5.py: 통합 영상 처리 및 시각화 프레임워크
-주요 기능: 앞선 실습들을 통합하여 다양한 색 공간 변환 결과를 한눈에 비교
+Description:
 
-처리 절차
+사용자가 슬라이더(Trackbar)를 조절함에 따라 영상이 실시간으로 이진화되는 Interactive GUI 구현
 
-예외 처리(try-except)를 포함한 안정적인 이미지 로드 함수 구현
+영상 내 배경과 객체를 분리하기 위한 최적의 Threshold 값을 직관적으로 탐색
 
-하나의 소스에서 GRAY, HSV, YUV 변환을 순차적으로 수행
+--self-check 모드를 통해 특정 임계값에서의 흰색 픽셀 개수를 자동 카운팅
 
-변환된 각 결과물과 분리된 채널 데이터들을 다중 윈도우(cv2.imshow)를 통해 시각적으로 비교 분석
+📂 Ex 05. 통합 영상 처리 프레임워크 구축
+"실습 내용의 모듈화 및 예외 처리를 포함한 통합 솔루션"
 
---no-gui 모드를 지원하여 명령행 인터페이스(CLI) 기반의 빠른 데이터 검증 가능
+Key Functions: try-except 구조, 다중 윈도우 시각화, 모듈화 함수
+
+Description:
+
+앞선 실습(GRAY, HSV, YUV 변환 및 채널 분리)을 하나의 소스 코드로 통합
+
+파일 로드 실패 시의 예외 처리(Exception Handling) 로직을 추가하여 프로그램 안정성 확보
+
+--no-gui 모드를 지원하여 CLI 환경에서도 이미지의 Shape와 픽셀 값을 빠르게 검증할 수 있는 유연한 구조 설계
+
+💡 실행 방법 (How to Run)
+각 스크립트는 터미널에서 다음과 같이 옵션을 주어 실행할 수 있습니다.
+
+Bash
+# 기본 실행 (GUI 모드)
+python ex5.py
+
+# 콘솔 출력 전용 모드
+python ex5.py --no-gui
