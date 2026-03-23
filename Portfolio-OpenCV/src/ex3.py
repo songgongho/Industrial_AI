@@ -9,12 +9,14 @@ import numpy as np
 def main() -> None:
     """Lenna 이미지를 YUV로 변환하고 채널을 시각화하는 예제입니다."""
     parser = argparse.ArgumentParser(description="Lenna BGR -> YUV 변환 및 채널 시각화")
-    parser.add_argument("--input", default="Lenna.png", help="입력 이미지 파일명")
+    parser.add_argument("--input", default="lenna.png", help="입력 이미지 파일명 (data 폴더 기준)")
     parser.add_argument("--no-gui", action="store_true", help="창 표시 없이 통계 출력만 수행")
     args = parser.parse_args()
 
-    base_dir = Path(__file__).resolve().parent
-    input_path = base_dir / args.input
+    base_dir = Path(__file__).resolve().parent.parent
+    input_path = base_dir / "data" / args.input
+    results_dir = base_dir / "results"
+    results_dir.mkdir(exist_ok=True)
 
     # 1) 이미지를 읽고 실패 시 즉시 종료합니다.
     bgr = cv2.imread(str(input_path), cv2.IMREAD_COLOR)
@@ -33,6 +35,13 @@ def main() -> None:
     y_max = int(np.max(y_channel))
     y_mean = float(np.mean(y_channel))
     print(f"[Y 통계] min={y_min}, max={y_max}, mean={y_mean:.2f}")
+
+    # YUV 채널 결과를 results 폴더에 저장합니다.
+    cv2.imwrite(str(results_dir / "ex3_yuv_image.png"), yuv)
+    cv2.imwrite(str(results_dir / "ex3_y_channel.png"), y_channel)
+    cv2.imwrite(str(results_dir / "ex3_u_channel.png"), u_channel)
+    cv2.imwrite(str(results_dir / "ex3_v_channel.png"), v_channel)
+    print(f"[INFO] 결과 저장 완료: {results_dir}")
 
     if args.no_gui:
         return
