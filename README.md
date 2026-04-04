@@ -162,7 +162,7 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
 
 **불균형 제조업 데이터를 활용한 MLP 베이스라인 구축 및 고장 예측 성능 최적화**
 
-* **프로젝트 링크**: [**Portfolio_AI4I_Predictive_Maintenance**]([링크 추가 필요](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio-ai4i_2020_predictive_maintenance))
+* **프로젝트 링크**: [**Portfolio_AI4I_Predictive_Maintenance**]([불균형 제조업 데이터 예지보전](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio-ai4i_2020_predictive_maintenance))
 * **주요 내용**:
     * PyTorch 환경 기반의 다층 퍼셉트론(MLP) 예지보전 베이스라인 모델 학습 및 평가지표 도출
     * Class Weight, SMOTE, Threshold Tuning 및 MLP 하이퍼파라미터 튜닝을 통한 데이터 불균형 완화
@@ -170,7 +170,7 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
     * 실험 결과 및 성능 분석 내용을 한국어 마크다운 PPT 보고서 형태로 자동 생성하는 파이프라인 구축
 * **결과 요약**:
     * 데이터 불균형 개선 기법을 적용하여 모델의 고장 예측 목표 성능인 Failure F1 Score 0.70 이상을 달성함
-* **[➡️ 최종 결과]([https://github.com/songgongho/Industrial_AI/tree/main/Portfolio-OpenCV/results](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio-ai4i_2020_predictive_maintenance/%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_%EC%A0%9C%EC%A1%B0%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EB%B6%84%EC%84%9D%EA%B3%BC%20%EC%B5%9C%EC%A0%81%ED%99%94%20%EA%B3%BC%EC%A0%9C_2025254010%20%EC%86%A1%EA%B3%B5%ED%98%B8.pdf))**
+* **[➡️ 최종 결과]([https://github.com/songgongho/Industrial_AI/tree/main/Portfolio-OpenCV/results](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio-ai4i_2020_predictive_maintenance/%EA%B2%B0%EA%B3%BC%EB%B3%B4%EA%B3%A0%EC%84%9C_%EC%A0%9C%EC%A1%B0%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EB%B6%84%EC%84%9D%EA%B3%BC%20%EC%B5%9C%EC%A0%81%ED%99%94%20%EA%B3%BC%EC%A0%9C_2025254010%20%EC%86%A1%EA%B3%B5%ED%98%B8.pdf)**
 <br>
 
 ***
