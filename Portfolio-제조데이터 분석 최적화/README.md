@@ -44,7 +44,7 @@ python main.py adv-client
 python main.py verify-env
 ```
 
-## 3) 실습 권장 순서 (4주차 PDF 흐름 기준)
+## 3) 실습 순서
 
 1. `server-mfg` 실행 (가상 설비/센서 데이터 발생)
 2. 다른 터미널에서 `client-mfg` 실행 (수집 확인)
