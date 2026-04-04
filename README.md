@@ -178,7 +178,7 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
 
 **가상 설비 서버 연동 및 정제, 라벨링, 품질 검증을 아우르는 데이터 파이프라인 자동화**
 
-* **프로젝트 링크**: [**Portfolio_Manufacturing_Data_Pipeline**](링크 추가 필요)
+* **프로젝트 링크**: [**Portfolio_Manufacturing_Data_Pipeline**](https://github.com/songgongho/Industrial_AI/tree/main/Portfolio-%EC%A0%9C%EC%A1%B0%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EB%B6%84%EC%84%9D%20%EC%B5%9C%EC%A0%81%ED%99%94)
 * **주요 내용**:
     * `asyncua` 라이브러리를 활용한 가상 제조 설비 서버 및 센서 데이터 수집 클라이언트 구현
     * 수집된 원시 데이터(`raw_sensor_dataset.csv`)의 결측치 대치 및 정제 자동화
@@ -186,6 +186,8 @@ Flask 프레임워크를 사용하여 기본적인 로그인, 입출금, 잔액 
     * 통합 실행기(`main.py`)를 개발하여 기초 데이터 발생부터 심화 수집 시나리오까지 모듈식 실행 환경 제공
 * **결과 요약**:
     * 산업 표준인 OPC UA 통신 기반의 데이터 수집부터 최종 품질 점검까지의 프로세스를 자동화하여 현장 적용 가능한 데이터 엔지니어링 역량을 확보함
+
+    **[➡️ 최종 결과 보고서 바로가기](https://github.com/songgongho/Industrial_AI/blob/main/Portfolio-%EC%A0%9C%EC%A1%B0%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EB%B6%84%EC%84%9D%20%EC%B5%9C%EC%A0%81%ED%99%94/result_report.md)**
 
 <br>
 
