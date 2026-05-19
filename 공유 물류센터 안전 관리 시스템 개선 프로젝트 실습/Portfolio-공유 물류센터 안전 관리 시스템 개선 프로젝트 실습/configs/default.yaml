@@ -1,0 +1,26 @@
+project:
+  name: "공유 물류센터 안전 관리 시스템 개선 프로젝트 실습"
+  data_name: "data_R2.csv"
+
+labeling:
+  idle_active_power_threshold: 1.0
+  idle_current_threshold: 0.5
+  temp_alert_threshold: 60.0
+  pf_alert_threshold: 0.6
+  freq_low: 49.0
+  freq_high: 61.0
+  active_power_negative_threshold: -1.0
+  overload_k: 3.0
+  spike_window: 3
+  spike_threshold: 1000.0
+  night_hours: [0, 1, 2, 3, 4, 5]
+  night_active_power_threshold: 5.0
+
+columns:
+  timestamp: ["timestamp", "time", "datetime"]
+  device_id: ["device_id", "eqp_id", "sensor_id", "line_id"]
+  active_power: ["active_power", "power_kw", "power_w", "P"]
+  current: ["current_a", "current", "I"]
+  alarm: ["alarm_flag", "alarm", "alert_flag"]
+  status: ["status", "mode", "state"]
+
