@@ -1,64 +1,68 @@
 # 멀티모달 융합 기반 PCB MLB Press 공정 이상·불량 예측 및 공정 조건 최적화
 
-영문명: **PCB MLB Press Defect Prediction — Multimodal Fusion & Causal Analysis**
+**프로젝트명**: MS-CDPNet (Multi-Stage Causal Defect Propagation Network)  
+**부제**: 변수-결함-출하 다단계 인과 그래프 학습 기반 반도체 PCB 적층 공정 불량 예측 및 설명
 
-프로젝트명: **MS-CDPNet** (Multi-Stage Causal Defect Propagation Network)  
-부제: 변수-결함-출하 다단계 인과 그래프 학습 기반 반도체 PCB 적층 공정 불량 예측 및 설명
-
-**Author**: Song Gong-Ho (송공호), Student ID: 2025254010  
-**Institution**: Chungbuk National University, Department of Industrial Artificial Intelligence  
-**Project Type**: M.S. Thesis + Industrial Collaboration  
-**Thesis Target**: February 2027  
-**License**: MIT (see [LICENSE](LICENSE))  
-**Repository**: `pcb-lamination-press-defect-prediction`
-
----
-
-## 📋 Table of Contents
-- [Overview](#overview)
-- [Problem Definition](#problem-definition)
-- [Key Features](#key-features)
-- [Quick Start](#quick-start)
-- [Project Structure](#project-structure)
-- [Usage Examples](#usage-examples)
-- [Results & Demo](#results--demo)
-- [Data Schema](#data-schema)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [Citation](#citation)
-- [License & Disclaimer](#license--disclaimer)
+| 항목 | 내용 |
+|------|------|
+| 작성자 | 송공호 (2025254010) |
+| 소속 | 충북대학교 산업인공지능학과 |
+| 유형 | 석사 학위논문 + 산학 협력 |
+| 논문 목표 | 2027년 2월 |
+| 라이선스 | MIT |
 
 ---
 
-## 🎯 Overview
+## 목차
 
-### Research Problem
-
-**Semiconductor PCB lamination (MLB press) processes** face critical yield challenges:
-- **Press defects** (temperature anomalies, pressure loss, vacuum leaks) occur during the 10+ minute cycle
-- **Downstream failures** (voids, warping, delamination) are detected only after expensive testing
-- **Time lag** between Press (P013) and Outgoing Quality (P019) inspection makes root cause analysis difficult
-- **Cost asymmetry**: False-negatives cause massive warranty costs; false-positives halt production
-
-### Solution Approach
-
-This project builds a **multimodal, explainable defect predictor** that:
-1. Detects **Press anomalies in real-time** using time-series + event logs + AOI images
-2. Predicts **downstream defect propagation** using causal DAG learning (PCMCI, NOTEARS)
-3. Explains **defect mechanisms** via attention maps and SHAP gradients
-4. Optimizes **process conditions** using the model as a differentiable surrogate
-
-### Target Metric
-
-- **AUROC ≥0.98** on P013 press anomaly detection
-- **FAR@Recall=0.95** < 5% (cost-aware: FN weight = 100x FP weight)
-- **Causal edge accuracy**: ≥85% on synthetic ground-truth DAG
+- [연구 개요](#연구-개요)
+- [핵심 기능](#핵심-기능)
+- [빠른 시작](#빠른-시작)
+- [프로젝트 구조](#프로젝트-구조)
+- [사용 예시](#사용-예시)
+- [결과 및 데모](#결과-및-데모)
+- [데이터 스키마](#데이터-스키마)
+- [배포 방법](#배포-방법)
+- [개발 환경](#개발-환경)
+- [인용](#인용)
+- [라이선스 및 주의사항](#라이선스-및-주의사항)
 
 ---
 
-## 🔬 Key Features
+## 연구 개요
 
-### 1. Synthetic Data Generator
+### 문제 정의
+
+**반도체 PCB 적층(MLB Press) 공정**은 다음과 같은 수율 문제를 가집니다.
+
+- **공정 불량**: 10분 이상 소요되는 사이클 내 온도 이상, 압력 손실, 진공 누출 발생
+- **후공정 불량**: VOID(기포), 휨(Warping), 층간 박리(Delamination)는 고가의 검사 후에야 발견
+- **시간 지연**: 압착 공정(P013)과 출하 검사(P019) 사이의 간격으로 인해 근본 원인 분석 어려움
+- **비대칭 비용**: 미검출(FN)은 대규모 불량 비용, 과검출(FP)은 생산 중단 야기
+
+### 해결 방법
+
+**멀티모달 + 설명 가능 불량 예측 시스템**:
+
+1. 시계열 + 이벤트 로그 + AOI 이미지를 활용한 **실시간 Press 이상 탐지**
+2. 인과 DAG 학습(PCMCI, NOTEARS)을 통한 **하류 불량 전파 예측**
+3. 어텐션 맵 및 SHAP 그래디언트를 통한 **불량 메커니즘 설명**
+4. 모델을 미분 가능한 대리 함수로 활용한 **공정 조건 최적화**
+
+### 목표 지표
+
+| 지표 | 목표값 |
+|------|--------|
+| AUROC (P013 이상 탐지) | ≥ 0.98 |
+| FAR @ Recall=0.95 | < 5% (FN 가중치 = FP × 100) |
+| 인과 엣지 정확도 | ≥ 85% (합성 정답 DAG 기준) |
+
+---
+
+## 핵심 기능
+
+### 1. 합성 데이터 생성기
+
 ```python
 from src.data.synthpress import generate_press_cycle
 
@@ -69,201 +73,146 @@ frame, label, metadata = generate_press_cycle(
     anomaly_prob=0.5
 )
 ```
-- 6개 P013 단일 이상 시나리오
-- 4가지 다중 이상 (realistic cascade patterns)
+
+- P013 단일 이상 시나리오 6종
+- 현실적인 연쇄 이상 패턴 4종
 - 도메인 제약조건 기반 검증
 
-### 2. Multimodal Fusion
-- **PressFuse** model: Cross-modal attention + temporal convolution
-- Inputs: Time-series (pressure, temperature, vacuum) + Categorical events + AOI images
-- Outputs: Binary defect + Multitype classification + Anomaly confidence
+### 2. 멀티모달 융합 모델 (PressFuse)
 
-### 3. Cost-Aware Metrics
+- Cross-modal Attention + Temporal Convolution
+- 입력: 시계열(압력, 온도, 진공) + 범주형 이벤트 + AOI 이미지
+- 출력: 이진 불량 분류 + 다중 불량 유형 분류 + 이상 신뢰도
+
+### 3. 비용 민감 평가 지표
+
 ```python
 from src.eval.metrics import cost_aware_score, far_at_recall
 
-# Cost matrix: FN cost = 100, FP cost = 5
-score = cost_aware_score(
-    y_true=y_test,
-    y_pred_proba=y_prob,
-    fn_cost=100,
-    fp_cost=5
-)
+# FN 비용 = 100, FP 비용 = 5
+score = cost_aware_score(y_true=y_test, y_pred_proba=y_prob, fn_cost=100, fp_cost=5)
 far = far_at_recall(y_true, y_pred_proba, recall_threshold=0.95)
 ```
 
-### 4. Explainability
-- **Attention visualization**: Cross-modal attention maps
-- **SHAP gradients**: Feature importance & model behavior
-- **Causal DAG**: Variable→Defect→Yield paths
+### 4. 설명 가능성
 
-### 5. Web Dashboard (Optional)
-- Real-time Streamlit UI for demo
-- Interactive data upload & analysis
-- Pre-computed result inspection
+- **어텐션 시각화**: Cross-modal 어텐션 맵
+- **SHAP 그래디언트**: 특성 중요도 및 모델 행동 분석
+- **인과 DAG**: 변수 → 결함 → 수율 경로 시각화
+
+### 5. 웹 대시보드 (선택)
+
+- Streamlit 기반 실시간 데모 UI
+- 데이터 업로드 및 인터랙티브 분석
+- 사전 계산된 결과 조회
 
 ---
 
-## 🚀 Quick Start
+## 빠른 시작
 
-### Installation
+### 환경 설치
 
 ```bash
-# Clone repository
-git clone https://github.com/username/pcb-lamination-press-defect-prediction.git
-cd pcb-lamination-press-defect-prediction
-
-# Create virtual environment (Python 3.11+)
+# 가상환경 생성 (Python 3.11 이상)
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+.venv\Scripts\activate       # Windows
+# source .venv/bin/activate  # Linux/Mac
 
-# Install dependencies
+# 의존성 설치
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# (Optional) Install development tools
+# 개발 도구 (선택)
 pip install -r requirements-dev.txt
 ```
 
-### 30-Second Demo
+### 30초 데모
 
 ```bash
-# Generate synthetic dataset
+# 1. 합성 데이터셋 생성
 python scripts/generate_demo_data.py --output data/demo/sample.parquet
 
-# Train model (synthetic, fast)
-python scripts/train.py \
-  --synthetic-cycles 100 \
-  --batch-size 16 \
-  --epochs 5 \
-  --fast-dev-run
+# 2. 모델 학습 (합성 데이터, 빠른 실행)
+python scripts/train.py --synthetic-cycles 100 --batch-size 16 --epochs 5 --fast-dev-run
 
-# Evaluate
+# 3. 평가
 python scripts/predict.py \
   --data data/demo/sample.parquet \
   --checkpoint outputs/model.ckpt \
   --output reports/predictions.json
 
-# View results
+# 4. 결과 리포트 생성
 python scripts/generate_html_report.py \
   --predictions reports/predictions.json \
   --output app/data/dashboard-results.html
 ```
 
-### Web Dashboard (Streamlit)
+### 웹 대시보드 실행
 
 ```bash
 streamlit run scripts/ui.py
-# Opens: http://localhost:8501
+# 접속: http://localhost:8501
 ```
 
 ---
 
-## 📁 Project Structure
+## 프로젝트 구조
 
 ```
-pcb-lamination-press-defect-prediction/
+Portfolio_pcb-lamination-press-defect-prediction/
 ├── src/
 │   ├── data/
-│   │   ├── loaders.py       # Data loading & preprocessing
-│   │   ├── schema.py        # Domain schema (P013/P019)
-│   │   ├── synthpress.py    # Synthetic data generator
-│   │   └── audit.py         # Data validation & reporting
+│   │   ├── loaders.py          # 데이터 로딩 및 전처리
+│   │   ├── schema.py           # 도메인 스키마 (P013/P019)
+│   │   ├── synthpress.py       # 합성 데이터 생성기
+│   │   └── audit.py            # 데이터 검증 및 리포트
 │   ├── models/
-│   │   ├── pressfuse.py     # Multi-modal fusion model
-│   │   ├── heads.py         # Task-specific heads
-│   │   └── baselines/       # Reference models
+│   │   ├── pressfuse.py        # 멀티모달 융합 모델
+│   │   ├── heads.py            # 태스크별 출력 헤드
+│   │   └── baselines/          # 참조 베이스라인 모델
 │   ├── training/
-│   │   ├── module.py        # PyTorch Lightning module
-│   │   └── callbacks.py     # Custom callbacks (metrics, logging)
+│   │   ├── module.py           # PyTorch Lightning 학습 모듈
+│   │   └── callbacks.py        # 커스텀 콜백 (지표, 로깅)
 │   ├── eval/
-│   │   └── metrics.py       # Cost-aware evaluation metrics
-│   ├── explain/
-│   │   ├── attention_viz.py # Attention map visualization
-│   │   └── shap_grad.py     # SHAP gradient integration
-│   └── utils/
-│       ├── config.py        # Configuration management
-│       ├── logging.py       # Logging setup
-│       └── paths.py         # Path utilities
+│   │   └── metrics.py          # 비용 민감 평가 지표
+│   └── explain/
+│       ├── attention_viz.py    # 어텐션 맵 시각화
+│       └── shap_grad.py        # SHAP 그래디언트
 │
 ├── scripts/
-│   ├── train.py                     # Training CLI
-│   ├── eval.py                      # Evaluation CLI
-│   ├── predict.py                   # Inference CLI
-│   ├── secom_baseline.py            # Reference baseline (SECOM dataset)
-│   ├── generate_demo_data.py        # Demo data generation
-│   ├── generate_html_report.py      # Static report generation
-│   ├── ui.py                        # Streamlit dashboard
-│   └── admin/                       # Maintenance scripts
+│   ├── train.py                # 학습 CLI
+│   ├── eval.py                 # 평가 CLI
+│   ├── predict.py              # 추론 CLI
+│   ├── secom_baseline.py       # SECOM 베이스라인 실행
+│   ├── generate_demo_data.py   # 데모 데이터 생성
+│   ├── generate_html_report.py # 정적 리포트 생성
+│   └── ui.py                   # Streamlit 대시보드
 │
-├── tests/
-│   ├── test_synthpress.py
-│   ├── test_loaders.py
-│   ├── test_metrics.py
-│   ├── test_model.py
-│   ├── test_training.py
-│   └── fixtures/
-│
-├── configs/
-│   ├── experiment/               # Experiment configurations
-│   ├── data/                     # Data loading configs
-│   └── model/                    # Model configs
-│
+├── tests/                      # pytest 단위 테스트
+├── configs/                    # Hydra 실험 설정
+│   ├── experiment/
+│   ├── data/
+│   └── model/
 ├── data/
-│   ├── raw/
-│   │   ├── sample_synthetic.parquet  # Always included
-│   │   ├── secom/                    # Public dataset
-│   │   └── deeppcb/                  # Public dataset
-│   ├── processed/                    # Preprocessed datasets
-│   └── demo/                         # Demo data for quick start
-│
-├── notebooks/
-│   ├── 01_eda.ipynb
-│   ├── 02_model_analysis.ipynb
-│   └── 03_deployment.ipynb
-│
-├── docs/
-│   ├── DEPLOYMENT.md
-│   ├── API.md
-│   ├── DATA_SCHEMA.md
-│   ├── ARCHITECTURE.md
-│   └── REFACTORING.md
-│
-├── app/
-│   ├── index.html                # Static dashboard entry
-│   ├── css/style.css
-│   ├── js/data-loader.js
-│   └── data/
-│
-├── paper/
-│   ├── references.bib
-│   └── notes/
-│
-├── .github/
-│   ├── workflows/
-│   │   ├── tests.yml
-│   │   └── pages.yml
-│   ├── ISSUE_TEMPLATE/
-│   └── PULL_REQUEST_TEMPLATE.md
-│
-├── .gitignore
-├── .pre-commit-config.yaml
+│   ├── raw/                    # 원본 데이터 (공개 데이터셋)
+│   ├── processed/              # 전처리 완료 데이터
+│   └── demo/                   # 빠른 시작용 데모 데이터
+├── notebooks/                  # Jupyter 분석 노트북
+├── docs/                       # 상세 문서
+├── app/                        # 정적 대시보드 (GitHub Pages)
+├── paper/                      # 논문 참고자료 및 노트
 ├── pyproject.toml
 ├── requirements.txt
 ├── requirements-dev.txt
-├── README.md                    # (You are here)
-├── SETUP.md
-├── CONTRIBUTING.md
-├── CODE_OF_CONDUCT.md
-├── CHANGELOG.md
-└── LICENSE
+├── dvc.yaml                    # DVC 파이프라인
+└── .gitignore
 ```
 
 ---
 
-## 📖 Usage Examples
+## 사용 예시
 
-### Example 1: Train on Synthetic Data
+### 합성 데이터로 학습
 
 ```bash
 python scripts/train.py \
@@ -274,7 +223,7 @@ python scripts/train.py \
   --output-dir outputs/v1
 ```
 
-### Example 2: Evaluate with Domain Labels
+### 라벨 데이터로 평가
 
 ```bash
 python scripts/eval.py \
@@ -284,7 +233,7 @@ python scripts/eval.py \
   --metrics auroc,far_at_recall,cost_aware
 ```
 
-### Example 3: Run SECOM Baseline
+### SECOM 공개 데이터셋 베이스라인
 
 ```bash
 python scripts/secom_baseline.py \
@@ -293,36 +242,25 @@ python scripts/secom_baseline.py \
   --model logistic_regression
 ```
 
-### Example 4: Generate Predictions
+### 전체 테스트 실행
 
 ```bash
-python scripts/predict.py \
-  --data data/demo/sample.parquet \
-  --checkpoint outputs/v1/model.ckpt \
-  --batch-size 128 \
-  --output-format json
-```
-
-### Example 5: Test with Pytest
-
-```bash
-# Run all tests
+# 전체 테스트
 pytest tests/ -v
 
-# Run specific module
+# 특정 모듈
 pytest tests/test_synthpress.py -v
 
-# With coverage
+# 커버리지 포함
 pytest tests/ --cov=src --cov-report=html
 ```
 
 ---
 
-## 📊 Results & Demo
+## 결과 및 데모
 
-### Sample Output
+### 예측 출력 형식
 
-#### Prediction JSON
 ```json
 {
   "cycle_id": 42,
@@ -339,355 +277,177 @@ pytest tests/ --cov=src --cov-report=html
   },
   "explanation": {
     "top_features": ["HPPRESSPV", "PT1", "VACUUM"],
-    "attention_weights": {...}
+    "attention_weights": {}
   }
 }
 ```
 
-#### Dashboard HTML
-Visit `app/index.html` after running:
+### 대시보드 HTML
+
 ```bash
 python scripts/generate_html_report.py \
   --predictions outputs/predictions.json \
   --output app/data/dashboard.html
 ```
 
-Then open `app/index.html` in your browser.
+생성 후 `app/index.html`을 브라우저에서 열어 확인합니다.
 
 ---
 
-## 📡 Data Schema
+## 데이터 스키마
 
-### Press Process Variables (P013)
-| Variable | Type | Range | Unit | Domain |
-|----------|------|-------|------|--------|
-| `HPPRESSPV` | Float | 0-99 | kgf/㎠ | Pressure (measured) |
-| `HPPRESSV` | Float | 0-99 | kgf/㎠ | Pressure (setpoint) |
-| `FHPPRESSPV` | Float | 0-45 | kgf/㎠ | Final pressure (measured) |
-| `VACUUM` | Float | 0-764 | mmHg | Vacuum level |
-| `HPTEMPSV` | Float | 40-230 | ℃ | Setpoint temperature |
-| `PT1`-`PT9` | Float | 20-230 | ℃ | Plate temperatures (9 channels) |
+### Press 공정 변수 (P013)
 
-### Defect Labels (P019)
-| Code | Defect Type | Category | Notes |
-|------|-------------|----------|-------|
-| P019-013 | VOID | Defect | Moisture trapping |
-| P019-014 | Outer edge VOID | Defect | Edge delamination |
-| P019-028 | Press trouble scrapped | Equipment | Detected at press |
-| P019-036 | Surface VOID scrapped | Defect | Post-bake surface |
-| P019-037 | Warping scrapped | Defect | XY deformation |
-| P019-0XX | (37 types total) | Mixed | Refer to `src/data/schema.py` |
+| 변수명 | 형식 | 범위 | 단위 | 설명 |
+|--------|------|------|------|------|
+| `HPPRESSPV` | Float | 0–99 | kgf/㎠ | 압력 (측정값) |
+| `HPPRESSV` | Float | 0–99 | kgf/㎠ | 압력 (설정값) |
+| `FHPPRESSPV` | Float | 0–45 | kgf/㎠ | 최종 압력 (측정값) |
+| `VACUUM` | Float | 0–764 | mmHg | 진공 수준 |
+| `HPTEMPSV` | Float | 40–230 | ℃ | 온도 설정값 |
+| `PT1`–`PT9` | Float | 20–230 | ℃ | 플레이트 온도 (9채널) |
+
+### 불량 유형 (P019)
+
+| 코드 | 불량 유형 | 분류 | 비고 |
+|------|-----------|------|------|
+| P019-013 | VOID | 불량 | 수분 트래핑 |
+| P019-014 | 외곽 VOID | 불량 | 엣지 박리 |
+| P019-028 | Press 트러블 스크랩 | 설비 | 압착 공정 내 탐지 |
+| P019-036 | 표면 VOID 스크랩 | 불량 | 베이킹 후 표면 불량 |
+| P019-037 | 휨(Warping) 스크랩 | 불량 | XY 변형 |
+| P019-0XX | (총 37가지) | 혼합 | `src/data/schema.py` 참고 |
 
 ---
 
-## 🌐 Deployment
+## 배포 방법
 
-### Option 1: GitHub Pages (Static Site)
+### GitHub Pages (정적 사이트)
 
 ```bash
-# 1. Generate static report
+# 1. 정적 리포트 생성
 python scripts/generate_html_report.py \
   --predictions outputs/predictions.json \
   --output app/index.html
 
-# 2. Enable GitHub Pages in repo settings
-#    → Source: "Deploy from a branch"
-#    → Branch: "main", Folder: "app"
+# 2. GitHub 저장소 설정 → Pages → Branch: main / Folder: app
 
-# 3. Push to GitHub
-git add app/
-git commit -m "docs: update dashboard"
-git push
-
-# 4. View at https://username.github.io/pcb-lamination-press-defect-prediction
+# 3. 커밋 후 푸시
+git add app/ && git commit -m "docs: 대시보드 업데이트" && git push
 ```
 
-### Option 2: Streamlit Cloud
+### Streamlit Cloud
 
 ```bash
-# 1. Push to GitHub
-git push origin main
-
-# 2. Go to https://streamlit.io/cloud
-#    → New app → select repository & "scripts/ui.py"
-
-# 3. App runs automatically on updates
+# 1. GitHub에 푸시 후
+# 2. https://streamlit.io/cloud 접속
+#    → New app → 저장소 선택 → "scripts/ui.py" 지정
 ```
 
-### Option 3: Docker (Production)
+### Docker
 
 ```bash
-# Build image
+# 이미지 빌드
 docker build -t pcb-press-pred:latest .
 
-# Run model training
+# 학습
 docker run --gpus all pcb-press-pred:latest python scripts/train.py
 
-# Run inference service
+# 추론 서비스
 docker run -p 8080:8080 pcb-press-pred:latest python scripts/predict.py
 ```
 
-Full deployment guide: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+자세한 배포 가이드: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
 ---
 
-## 🔧 Development
+## 개발 환경
 
-### Setup Development Environment
-
-See [SETUP.md](SETUP.md) for detailed instructions.
+### 개발 환경 설정
 
 ```bash
-# Install dev dependencies
+# 개발 의존성 설치
 pip install -r requirements-dev.txt
 
-# Enable pre-commit hooks
+# pre-commit 훅 설정
 pre-commit install
 
-# Run tests
-pytest tests/ -v
-
-# Lint code
+# 코드 스타일 검사
 ruff check src/
 black --check src/
 
-# Auto-format
-black src/
-ruff check src/ --fix
+# 자동 포맷
+black src/ && ruff check src/ --fix
 ```
 
-### Code Style
+### 코드 스타일
 
-- **Python 3.11+** syntax (PEP 604: `X | None`)
-- **Type hints required** on all functions
-- **Black** formatting (88 char line length)
-- **Ruff** linting
-- **Docstrings** in Google style
+- Python 3.11+ 문법 (PEP 604: `X | None`)
+- 모든 함수에 타입 힌트 필수
+- Black 포맷 (88자 기준)
+- Ruff 린트
+- Google 스타일 독스트링
 
----
+### 다음 단계
 
-## 📚 Documentation
-
-| Document | Purpose |
-|----------|---------|
-| [SETUP.md](SETUP.md) | Installation & environment setup |
-| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Deployment procedures (GitHub Pages, Docker, Cloud) |
-| [docs/API.md](docs/API.md) | API reference for key modules |
-| [docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md) | Complete data schema & mappings |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture & design decisions |
-| [docs/REFACTORING.md](docs/REFACTORING.md) | Code quality improvements (backlog) |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community guidelines |
-| [CHANGELOG.md](CHANGELOG.md) | Version history |
+1. `data/raw/`에 SECOM 등 공개 데이터셋 배치
+2. `src/data/synthpress.py`로 합성 Press 사이클 검증
+3. `python scripts/secom_baseline.py --data-dir data/raw/secom` 로 베이스라인 평가
+4. `python scripts/train.py --fast-dev-run --epochs 1 --batch-size 2`
+5. `streamlit run scripts/ui.py` 로 진행 상황 모니터링
 
 ---
 
-## 🎓 Citation
+## 관련 문서
 
-If you use this project in your research, please cite:
+| 문서 | 설명 |
+|------|------|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 시스템 아키텍처 및 설계 결정 |
+| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | 배포 절차 (GitHub Pages, Docker, Cloud) |
+| [docs/API.md](docs/API.md) | 주요 모듈 API 레퍼런스 |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | 기여 가이드라인 |
+| [CHANGELOG.md](CHANGELOG.md) | 버전 이력 |
+
+---
+
+## 인용
+
+이 프로젝트를 연구에 활용하시는 경우 아래와 같이 인용해 주세요.
 
 ```bibtex
 @thesis{song2027cdpnet,
   author = {Song, Gong-Ho},
-  title = {Multi-Stage Causal Defect Propagation Network for PCB Lamination Press Anomaly Detection},
+  title  = {Multi-Stage Causal Defect Propagation Network for PCB Lamination Press Anomaly Detection},
   school = {Chungbuk National University, Department of Industrial Artificial Intelligence},
-  year = {2027},
-  month = {February}
+  year   = {2027},
+  month  = {February}
 }
 ```
 
 ---
 
-## 📄 License & Disclaimer
+## 라이선스 및 주의사항
 
-**License**: MIT License (see [LICENSE](LICENSE))
+**라이선스**: MIT License ([LICENSE](LICENSE) 참고)
 
-### Important Notes
+1. **원본 데이터 비공개**: 실제 제조 데이터는 기밀이며 이 저장소에 포함되지 않습니다.
+   - 합성 데이터 및 공개 데이터셋(SECOM, DeepPCB)만 제공됩니다.
+   - 실제 데이터 연동은 `src/data/schema.py`의 스키마를 참고하세요.
 
-1. **Proprietary Data**: Original manufacturing data is confidential and NOT included.
-   - Only synthetic and public datasets (SECOM, DeepPCB) are provided.
-   - To integrate with your manufacturing data, follow the schema in `src/data/schema.py`.
+2. **연구 목적**: 학술 연구, 학위논문, 방법론 검증 및 산업 응용 베이스라인 비교를 위해 제작되었습니다.
 
-2. **Research Purpose**: This code is intended for:
-   - Academic research and thesis publication
-   - Methodology validation and reproduction
-   - Baseline comparison for industrial applications
-
-3. **Commercial Use**: Contact Chungbuk National University for:
-   - Proprietary data sharing agreements
-   - Technology transfer licenses
-   - Production deployment support
+3. **상업적 활용**: 원본 데이터 공유, 기술 이전, 상용 배포 관련 문의는 충북대학교로 연락 바랍니다.
 
 ---
 
-## 📞 Contact & Support
+## 연락처
 
-**Author**: Song Gong-Ho (송공호)  
-**Email**: contact@example.com  
-**Institution**: Chungbuk National University  
-**Department**: Industrial Artificial Intelligence  
-
-### Getting Help
-
-- **Issues/Bugs**: [GitHub Issues](https://github.com/username/pcb-lamination-press-defect-prediction/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/username/pcb-lamination-press-defect-prediction/discussions)
-- **Contributing**: See [CONTRIBUTING.md](CONTRIBUTING.md)
+**작성자**: 송공호  
+**소속**: 충북대학교 산업인공지능학과  
+**이메일**: songgongho@gmail.com  
+**GitHub Issues**: 버그 보고 및 기능 제안 환영
 
 ---
 
-## 🔮 Future Work
-
-- [ ] Integration with real-time MES data streaming
-- [ ] Multi-equipment causal learning (Press units 3-6)
-- [ ] Reinforcement learning for condition optimization
-- [ ] Mobile app for in-plant monitoring
-- [ ] Mixed-signal anomaly detection (voltage, current monitoring)
-
----
-
-**Last Updated**: May 2026  
-**Status**: 🚀 Active Development (Thesis Submission Feb 2027)
-
-
-### 완료
-
-- 프로젝트 기본 폴더 구조 생성
-- `requirements.txt`, `.gitignore`, `.pre-commit-config.yaml`, `pyproject.toml` 구성
-- `src/data/`
-  - `synthpress.py`: 합성 Press 사이클 생성기
-  - `audit.py`: 데이터 감사 및 마크다운 리포트
-  - `schema.py`: Press 스키마 및 split spec
-  - `loaders.py`: Press 로더, 리샘플링, group-aware split
-- `src/eval/`
-  - `metrics.py`: 비용가중 지표, 분류 리포트
-- `src/models/`
-  - `pressfuse.py`: cross-modal attention + 멀티태스크 모델
-  - `heads.py`: binary / defect / anomaly heads
-  - `baselines/secom.py`: SECOM용 sklearn 베이스라인
-- `src/training/`
-  - `module.py`: PyTorch Lightning 학습 모듈
-- `scripts/`
-  - `train.py`: synthetic 또는 실데이터용 학습 CLI
-  - `eval.py`: 라벨된 파일 또는 synthetic 데모 평가 CLI
-  - `secom_baseline.py`: SECOM 데이터셋 베이스라인 실행 CLI
-  - `audit.py`: 데이터 감사 CLI
-- `tests/`: 핵심 기능 단위 테스트
-
-### 진행 중 / 다음 단계
-
-- 실제 반도체 PCB 적층 공정 원본 데이터셋 연결
-- Hydra 기반 실험 설정 확장
-- MLflow/DVC 연동 강화
-- AOI 이미지/이벤트 스트림 모듈 추가
-
-### 웹 대시보드
-
-- 실행: `streamlit run scripts/ui.py`
-- Windows 보조 실행: `.\scripts\run_ui.ps1`
-- 왼쪽 페이지 메뉴:
-  - 대시보드
-  - 연구 방향
-  - 참고 자료
-  - 용어 사전
-  - 보안 / 운영 원칙
-- 표시 항목: 개발 목표, 진행률, 데이터/리포트 상태, 다음 작업, 데이터셋 업로드/폴더 분석
-
-#### 파일 업로드 설정
-
-- **최대 업로드 크기**: 10GB (기본값 200MB → 상향 조정)
-- **설정 적용 방법** (3단계 모두 자동 적용됨):
-  1. **환경변수**: `STREAMLIT_SERVER_MAX_UPLOAD_SIZE=10000` (PowerShell 스크립트에 포함)
-  2. **설정 파일**: `~/.streamlit/config.toml` 또는 `.streamlit/config.toml`
-     ```toml
-     [server]
-     maxUploadSize = 10000
-     ```
-  3. **CLI 옵션**: `--server.maxUploadSize=10000`
-- **더 큰 파일 분석**: 로컬 폴더 경로로 분석하면 크기 제한 없음
-  - UI에서 "또는 로컬 폴더 경로" 입력 후 "분석 시작"
-- **설정 확인**: `python check_streamlit_config.py`
-
-### Docker / 배포 전략 검토
-
-- 현재 단계에서는 `모델마다 Dockerfile을 완전히 분리`하기보다, `공통 베이스 이미지 1개 + 역할별 실행 명령`으로 시작하는 편이 유지보수에 유리합니다.
-- 권장 구조
-  - `ui`: Streamlit 대시보드
-  - `train`: 학습/실험용 GPU 이미지
-  - `eval` / `baseline`: 평가 및 베이스라인 실행용 이미지
-- 이렇게 하는 이유
-  - 공통 의존성(Python, pandas, sklearn, PyTorch, Streamlit)을 한 번만 관리할 수 있습니다.
-  - 모델이 늘어나도 `entrypoint`나 `command`만 바꿔 재사용하기 쉽습니다.
-  - 개발 초기에는 모델마다 의존성이 크게 갈리지 않으므로, Dockerfile이 너무 많아지는 것을 막을 수 있습니다.
-- 모델별로 분리하는 것이 좋은 경우
-  - 모델마다 CUDA / PyTorch / OpenCV 등 런타임이 크게 다를 때
-  - 모델을 서로 다른 스케줄러/서버에 독립 배포해야 할 때
-  - 추론 API가 모델별로 완전히 분리되어야 할 때
-- 결론: 지금은 `1개 공통 이미지 + 역할별 컨테이너`를 추천하고, 실제 서빙 단계에서만 모델별 분리를 검토하는 것이 좋습니다.
-
-### 데이터셋 분석 CLI
-
-- 실행: `python scripts/analyze_dataset.py --source data/raw/secom --output-dir reports/analysis`
-- 저장물: 분석 리포트 `.md`, 미리보기 `.csv`, 자료형 `.csv`, 수치형 요약 `.csv`
-
-### 데이터셋 전처리 CLI
-
-- 실행: `python scripts/preprocess_dataset.py --source data/raw/secom --output-dir data/processed/secom`
-- 저장물: 정제된 `.csv`, `.parquet`, 전처리 리포트 `.md`, 메타데이터 `.json`
-
-### SECOM 베이스라인
-
-- 실행: `python scripts/secom_baseline.py --data-dir data/raw/secom --target-length 128`
-- 모델: `StandardScaler + LogisticRegression(class_weight="balanced")`
-- 출력: AUROC, FAR@Recall, 비용가중 점수, train/test 크기
-
-### 기획 메모
-
-- 연구 방향은 "멀티모달 불량 전파 예측 + 설명 가능성 + 비용민감 평가"를 기본축으로 둡니다.
-- 보안 원칙은 원본 데이터 비외부화, 비밀정보 비저장, 업로드 파일 최소 보관입니다.
-
-## 빠른 시작 (Windows PowerShell)
-
-```powershell
-python -m venv .venv
-.venv\Scripts\activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-pre-commit install
-pytest
-```
-
-## 포함된 기본 구조
-
-- `src/data/`: 데이터 로더, audit, 합성 시뮬레이터
-- `src/eval/`: 평가지표
-- `configs/`: Hydra 설정
-- `paper/`: 논문 정리 노트, 참고문헌
-- `scripts/`: 실행용 진입점
-- `tests/`: 최소 단위 테스트
-
-## 다음 단계
-
-1. `data/raw/`에 SECOM 등 공개 데이터셋 배치
-2. `src/data/synthpress.py`로 합성 Press 사이클 검증
-3. `src/eval/metrics.py`를 기준으로 베이스라인 평가 시작
-4. `python scripts/secom_baseline.py --data-dir data/raw/secom --target-length 128`
-5. `python scripts/train.py --fast-dev-run --epochs 1 --batch-size 2`
-6. `python scripts/eval.py --synthetic-cycles 12`
-7. `streamlit run scripts/ui.py`로 진행 상황을 상시 모니터링
-
-## 추가 도구 및 재현성
-
-- EDA 복구 스크립트:
-  - `python scripts/eda_secom.py`  # SECOM EDA 리포트 생성
-  - `python scripts/eda_deeppcb.py` # DeepPCB EDA 리포트 생성
-
-- 자동 전처리 템플릿 생성:
-  - `python scripts/generate_preprocess_template.py --source data/raw/secom --output-dir configs/preprocess_templates`
-
-- MLflow 연동 (학습 추적):
-  - 빠른 실행: `python scripts/train.py --fast-dev-run --use-mlflow`
-  - 기본 실험 로컬 저장소: `./mlruns`
-
-- Hydra 기반 재현 예시:
-  - `python scripts/train_hydra.py`  # baseline 설정으로 빠른 실행
-
+**최종 수정**: 2026년 5월  
+**상태**: 개발 중 (학위논문 제출 목표 2027년 2월)
