@@ -1,0 +1,25 @@
+schema: '2.0'
+stages:
+  download_datasets:
+    cmd: python scripts/download_datasets.py --all
+    deps:
+    - path: scripts/download_datasets.py
+      hash: md5
+      md5: 00d79f97f349d12f7f4f9dfb94d4b493
+      size: 7448
+    outs:
+    - path: data/raw/bosch
+      hash: md5
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
+    - path: data/raw/deeppcb
+      hash: md5
+      md5: 0dd139bb5d2de9fa5a02a04eab302924.dir
+      size: 127807630
+      nfiles: 4548
+    - path: data/raw/secom
+      hash: md5
+      md5: 9cd2ec840d8accb9510727d535fe903f.dir
+      size: 7395610
+      nfiles: 3

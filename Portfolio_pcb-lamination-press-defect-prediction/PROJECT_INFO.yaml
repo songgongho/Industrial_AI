@@ -1,0 +1,180 @@
+# PROJECT_INFO.yaml
+# Fork 배포용 프로젝트 메타데이터
+
+project:
+  # 한글 이름 (가장 중요!)
+  korean_name: "멀티모달 융합 기반 PCB MLB Press 공정 이상·불량 예측 및 공정 조건 최적화"
+
+  # 영문 이름
+  english_name: "Multimodal Fusion-Based PCB MLB Press Defect Prediction and Process Optimization"
+
+  # 프로젝트 코드명
+  project_code: "MS-CDPNet"
+
+  # 깃허브 저장소명
+  repository_name: "pcb-lamination-press-defect-prediction"
+
+  # 축약형
+  short_name: "PCB Press Defect Prediction"
+
+author:
+  name: "Song Gong-Ho"
+  korean_name: "송공호"
+  student_id: "2025254010"
+  email: "contact@example.com"
+  affiliation: "Chungbuk National University"
+  department: "Department of Industrial Artificial Intelligence"
+
+project_type:
+  - "Graduate Thesis (M.S.)"
+  - "Industry Collaboration"
+  - "Open Source Research"
+
+timeline:
+  started: "2026-05"
+  thesis_submission: "2027-02"
+  public_release: "2026-05-24"
+
+repository_info:
+  github_url: "https://github.com/YOUR_USERNAME/pcb-lamination-press-defect-prediction"
+  github_pages: "https://YOUR_USERNAME.github.io/pcb-lamination-press-defect-prediction"
+  primary_branch: "main"
+  license: "MIT"
+
+documentation:
+  - README.md              # 프로젝트 개요 (한글 제목 강조)
+  - SETUP.md              # 설치 가이드
+  - FORK.md               # Fork 가이드 (중요!)
+  - FORK_DEPLOYMENT_GUIDE.md  # Fork 배포 완전 가이드
+  - CONTRIBUTING.md       # 기여 가이드
+  - CODE_OF_CONDUCT.md    # 커뮤니티 규칙
+  - SECURITY.md           # 보안 정책
+  - LICENSE               # MIT 라이선스
+  - CHANGELOG.md          # 버전 히스토리
+  - docs/API.md           # API 레퍼런스
+  - docs/DEPLOYMENT.md    # 배포 가이드
+  - docs/ARCHITECTURE.md  # 시스템 아키텍처
+  - docs/REFACTORING.md   # 코드 개선 로드맵
+
+github_workflows:
+  - .github/workflows/tests.yml       # CI/CD (자동 테스트)
+  - .github/workflows/pages.yml       # GitHub Pages 배포
+  - .github/PULL_REQUEST_TEMPLATE.md  # PR 템플릿
+  - .github/ISSUE_TEMPLATE/bug_report.md
+  - .github/ISSUE_TEMPLATE/feature_request.md
+  - .github/dependabot.yml            # 의존성 자동 업데이트
+  - .github/FUNDING.yml               # 펀딩 옵션
+
+technology_stack:
+  languages:
+    - Python 3.11+
+
+  ml_frameworks:
+    - PyTorch 2.x
+    - PyTorch Lightning
+    - scikit-learn
+
+  key_libraries:
+    - numpy
+    - pandas
+    - transformers
+    - streamlit
+
+  tools:
+    - pytest (testing)
+    - black (formatting)
+    - ruff (linting)
+    - MLflow (experiment tracking)
+    - DVC (data versioning)
+
+fork_readiness:
+  status: "READY FOR FORK"
+  checklist:
+    - name: "Folder Structure"
+      status: "✅ Complete"
+      link: "GITHUB_STRUCTURE.md"
+
+    - name: "Documentation"
+      status: "✅ Complete"
+      link: "README.md"
+
+    - name: "CI/CD Pipeline"
+      status: "✅ Complete"
+      link: ".github/workflows/"
+
+    - name: "Fork Guide"
+      status: "✅ Complete"
+      link: "FORK.md"
+
+    - name: "Code Quality"
+      status: "⚠️ 80% (Improving)"
+      link: "docs/REFACTORING.md"
+
+    - name: "Tests"
+      status: "✅ 75% Coverage"
+      link: "tests/"
+
+key_features:
+  - "Synthetic Data Generator (6 P013 defect types)"
+  - "Multimodal Fusion Model (PressFuse)"
+  - "Cost-Aware Metrics (FAR@Recall, cost-sensitive F1)"
+  - "PyTorch Lightning Training"
+  - "Explainability (Attention, SHAP)"
+  - "Streamlit Dashboard"
+  - "GitHub Actions CI/CD"
+  - "GitHub Pages Deployment"
+
+git_configuration:
+  primary_branch: "main"
+  protection_rules:
+    - require_pull_request_reviews: true
+    - require_status_checks: true
+    - dismiss_stale_reviews: true
+
+statistics:
+  total_files: 60
+  python_files: 25
+  test_files: 10
+  documentation_files: 15
+  config_files: 8
+
+  lines_of_code:
+    source: "~3,000"
+    tests: "~1,200"
+    docs: "~8,000"
+    total: "~13,700"
+
+keywords:
+  - "machine-learning"
+  - "deep-learning"
+  - "pytorch"
+  - "pytorch-lightning"
+  - "semiconductor"
+  - "manufacturing"
+  - "anomaly-detection"
+  - "defect-prediction"
+  - "explainable-ai"
+  - "time-series"
+  - "multimodal"
+
+quick_start:
+  fork: "Click 'Fork' button on GitHub"
+  clone: "git clone https://github.com/YOUR_USERNAME/pcb-lamination-press-defect-prediction.git"
+  install: "pip install -r requirements.txt"
+  test: "pytest tests/ -q"
+  train: "python scripts/train.py --fast-dev-run"
+  time_to_first_run: "< 5 minutes on CPU"
+
+support_channels:
+  issues: "GitHub Issues"
+  discussions: "GitHub Discussions"
+  email: "contact@example.com"
+
+notes:
+  - "한글 프로젝트명이 최우선 (README 맨 위)"
+  - "Fork 최적화 파일들이 준비됨"
+  - "CI/CD 자동화 완료"
+  - "GitHub Pages 배포 가능"
+  - "실제 제조 데이터는 NDA로 공개 불가"
+  - "합성 데이터로 100% 기능 재현 가능"
+

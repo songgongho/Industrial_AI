@@ -1,0 +1,35 @@
+stages:
+  audit_dataset:
+    cmd: python -m src.data.audit --input data/processed --output reports/audit.md
+    deps:
+      - src/data/audit.py
+      - data/processed
+    outs:
+      - reports/audit.md
+
+  download_datasets:
+    cmd: python scripts/download_datasets.py --all
+    deps:
+      - scripts/download_datasets.py
+    outs:
+      - data/raw/secom
+      - data/raw/deeppcb
+      - data/raw/bosch
+
+  eda_secom:
+    cmd: python scripts/eda_secom.py
+    deps:
+      - scripts/eda_secom.py
+      - data/raw/secom
+    outs:
+      - reports/eda_secom.md
+      - reports/secom_preview.csv
+
+  eda_deeppcb:
+    cmd: python scripts/eda_deeppcb.py
+    deps:
+      - scripts/eda_deeppcb.py
+      - data/raw/deeppcb
+    outs:
+      - reports/eda_deeppcb.md
+

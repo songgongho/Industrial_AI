@@ -1,0 +1,12 @@
+source: "data/raw/<dataset>"
+type: tabular
+columns:
+  - name: <column_name>
+    dtype: numeric|categorical|string
+rules:
+  drop_duplicates: true
+  numeric_impute: median
+  categorical_impute: mode_or_missing
+  normalize_numeric: false
+  encode_categorical: onehot
+

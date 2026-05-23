@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS-CDPNet - PCB Press Defect Prediction</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .tagline {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .hero-content h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .hero-content p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .hero-features {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .hero-features li {
+            color: #666;
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .hero-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .hero-image {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            min-height: 300px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .problems {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .problem-card {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .problem-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .problem-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .solution-card {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .solution-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .solution-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .feature-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .icon {
+            font-size: 24px;
+            width: 30px;
+            text-align: center;
+        }
+
+        footer {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 40px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid white;
+        }
+
+        footer a:hover {
+            opacity: 0.8;
+        }
+
+        .links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>MS-CDPNet</h1>
+            <p class="subtitle">Multi-Stage Causal Defect Propagation Network</p>
+            <p class="tagline">반도체 PCB MLB Press 공정 이상·불량 예측 및 공정 조건 최적화</p>
+        </header>
+
+        <!-- Hero Section -->
+        <div class="section">
+            <div class="hero">
+                <div class="hero-content">
+                    <h2>Real-Time Defect Detection</h2>
+                    <p>Semiconductor PCB lamination (MLB press) processes are complex. Press defects (temperature anomalies, pressure loss, vacuum leaks) occur during the 10+ minute cycle but are only detected after expensive downstream testing.</p>
+                    <p><strong>MS-CDPNet</strong> predicts defects in real-time using multimodal sensor data, enabling early intervention and yield optimization.</p>
+                    <ul class="hero-features">
+                        <li>Time-series + event logs + AOI image fusion</li>
+                        <li>Causal DAG learning for root cause analysis</li>
+                        <li>Cost-aware evaluation (FN weight ≫ FP weight)</li>
+                        <li>Built-in explainability (attention maps, SHAP)</li>
+                        <li>Production-ready with CI/CD pipeline</li>
+                    </ul>
+                </div>
+                <div class="hero-image">
+                    <div style="text-align: center;">
+                        🏭<br><br>
+                        <span style="font-size: 14px;">Press Process Monitoring</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Problem & Solution -->
+        <div class="section">
+            <h2>The Challenge</h2>
+            <div class="problems">
+                <div class="problem-card">
+                    <h3>⚠️ Time Lag</h3>
+                    <p>Press defects detected only after expensive downstream testing (24+ hours)</p>
+                </div>
+                <div class="problem-card">
+                    <h3>💰 Cost Asymmetry</h3>
+                    <p>False negatives (missed defects) → warranty loss (FN_cost=100x)</p>
+                </div>
+                <div class="problem-card">
+                    <h3>📊 Data Complexity</h3>
+                    <p>Multimodal data (time-series, events, images) with class imbalance (0.03% defect rate)</p>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 40px;">Our Solution</h2>
+            <div class="problems">
+                <div class="solution-card">
+                    <h3>✅ Real-Time Detection</h3>
+                    <p>Predict defects during the press cycle with 95%+ recall, minimizing warranty risk</p>
+                </div>
+                <div class="solution-card">
+                    <h3>✅ Explainable AI</h3>
+                    <p>Show which variables caused the defect (attention + SHAP) for operator feedback</p>
+                </div>
+                <div class="solution-card">
+                    <h3>✅ Cost-Optimized</h3>
+                    <p>Threshold tuned for business metrics (FAR@Recall=0.95 &lt; 5%), not just accuracy</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features -->
+        <div class="section">
+            <h2>Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3><span class="icon">🧠</span>Multimodal Fusion</h3>
+                    <p>Cross-modal attention mechanism for time-series, categorical events, and AOI images</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">📈</span>Multi-Task Learning</h3>
+                    <p>Simultaneous prediction of binary defect, defect type (37 categories), and anomaly confidence</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">💡</span>Explainability</h3>
+                    <p>Attention visualization + SHAP gradients show which features drive predictions</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">⚙️</span>Cost-Aware Metrics</h3>
+                    <p>FAR@Recall=0.95 and cost-weighted evaluation respect business constraints</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">🤖</span>Synthetic Data Generator</h3>
+                    <p>6 P013 anomaly types + multi-anomaly patterns for validation without real data</p>
+                </div>
+                <div class="feature-card">
+                    <h3><span class="icon">📊</span>Web Dashboard</h3>
+                    <p>Streamlit UI for interactive analysis, data upload, and real-time monitoring</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Start -->
+        <div class="section">
+            <h2>Quick Start (30 seconds)</h2>
+            <p style="color: #666; margin-bottom: 20px;">Get up and running with synthetic demo data:</p>
+
+            <div class="code-block">python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+pip install -r requirements.txt
+python scripts/generate_demo_data.py --output data/demo/sample.parquet
+python scripts/train.py --data data/demo/sample.parquet --epochs 5
+python scripts/predict.py --data data/demo/sample.parquet --checkpoint outputs/model.ckpt
+python scripts/generate_html_report.py --predictions outputs/predictions.json --output app/dashboard.html
+            </div>
+
+            <p style="color: #666; margin-bottom: 20px;">Then open <code>app/dashboard.html</code> in your browser.</p>
+
+            <div class="demo-buttons">
+                <a href="https://github.com/your-username/pcb-lamination-press-defect-prediction" class="btn btn-primary">
+                    View on GitHub
+                </a>
+                <a href="https://github.com/your-username/pcb-lamination-press-defect-prediction/blob/main/SETUP.md" class="btn btn-secondary">
+                    Full Setup Guide
+                </a>
+                <a href="https://github.com/your-username/pcb-lamination-press-defect-prediction/blob/main/README.md" class="btn btn-secondary">
+                    Documentation
+                </a>
+            </div>
+        </div>
+
+        <!-- Target Metrics -->
+        <div class="section">
+            <h2>Target Metrics</h2>
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-label">AUROC</div>
+                    <div class="metric-value">≥0.98</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">FAR@Recall=0.95</div>
+                    <div class="metric-value">&lt;5%</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Causal Accuracy</div>
+                    <div class="metric-value">≥85%</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Cost-Aware Score</div>
+                    <div class="metric-value">≥0.9</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Info -->
+        <div class="section">
+            <h2>Project Information</h2>
+            <p style="color: #666; margin-bottom: 20px;">
+                <strong>Author:</strong> Song Gong-Ho (송공호), Student ID: 2025254010<br>
+                <strong>Institution:</strong> Chungbuk National University, Department of Industrial Artificial Intelligence<br>
+                <strong>Type:</strong> M.S. Thesis + Industrial Collaboration Project<br>
+                <strong>Submission Target:</strong> February 2027<br>
+                <strong>License:</strong> MIT (see <a href="https://github.com/your-username/pcb-lamination-press-defect-prediction/blob/main/LICENSE" style="color: #667eea;">LICENSE</a>)
+            </p>
+
+            <p style="color: #666; margin-bottom: 20px; padding: 15px; background: #f5f5f5; border-left: 4px solid #ff9800; border-radius: 4px;">
+                <strong>⚠️ Data Privacy Notice:</strong> Original manufacturing data is proprietary and confidential (NDA protected). This repository includes only synthetic data and reference baselines (SECOM, DeepPCB). To integrate with your manufacturing data, please contact the author or your university.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 Song Gong-Ho. All rights reserved.</p>
+            <p style="margin-top: 15px; font-size: 14px;">
+                Multi-Stage Causal Defect Propagation Network<br>
+                for PCB Lamination Press Anomaly Detection
+            </p>
+            <div class="links">
+                <a href="https://github.com/your-username/pcb-lamination-press-defect-prediction">GitHub</a>
+                <a href="https://github.com/your-username/pcb-lamination-press-defect-prediction/blob/main/README.md">Documentation</a>
+                <a href="https://github.com/your-username/pcb-lamination-press-defect-prediction/issues">Report Issues</a>
+                <a href="https://github.com/your-username/pcb-lamination-press-defect-prediction/discussions">Discussions</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+

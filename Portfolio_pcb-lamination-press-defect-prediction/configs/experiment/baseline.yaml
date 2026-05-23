@@ -1,0 +1,7 @@
+# Baseline experiment config placeholder for the semiconductor PCB lamination thesis
+defaults:
+  - data: default
+  - model: default
+  - _self_
+experiment_name: baseline_lstm
+

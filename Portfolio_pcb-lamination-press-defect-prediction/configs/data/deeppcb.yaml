@@ -1,0 +1,5 @@
+# DeepPCB data config
+input_path: data/raw/deeppcb
+image_glob: "**/*.png"
+labels_glob: "**/*_mask.png"
+

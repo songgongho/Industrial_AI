@@ -1,0 +1,12 @@
+# Experiment config for SECOM quick runs
+defaults:
+  - data: secom
+  - model: default
+  - _self_
+experiment_name: secom_baseline
+training:
+  epochs: 3
+  batch_size: 8
+  val_ratio: 0.2
+  seed: 42
+
