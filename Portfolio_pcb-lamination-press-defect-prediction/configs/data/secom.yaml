@@ -1,0 +1,7 @@
+# SECOM data config
+input_path: data/raw/secom
+file_data: secom.data
+file_labels: secom_labels.data
+format: uci_tab_space
+
+

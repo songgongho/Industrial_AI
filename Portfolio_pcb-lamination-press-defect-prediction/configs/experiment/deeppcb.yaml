@@ -1,0 +1,11 @@
+# Experiment config for DeepPCB image encoder fine-tuning
+defaults:
+  - data: deeppcb
+  - model: default
+  - _self_
+experiment_name: deeppcb_vit
+training:
+  epochs: 5
+  batch_size: 16
+  seed: 42
+

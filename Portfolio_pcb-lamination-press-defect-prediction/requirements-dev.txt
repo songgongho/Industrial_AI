@@ -1,0 +1,55 @@
+# Development dependencies (optional, for contributing developers)
+# Install with: pip install -r requirements-dev.txt
+
+# Version control
+pre-commit>=3.7
+
+# Testing & Coverage
+pytest>=8.0
+pytest-cov>=5.0
+pytest-xdist>=3.5  # Parallel test execution
+pytest-timeout>=2.2
+
+# Code Quality
+black>=24.4.0
+ruff>=0.4.0
+isort>=5.13  # Import sorting
+mypy>=1.10   # Type checking
+
+# Documentation
+sphinx>=7.0  # (optional, for doc generation)
+sphinx-rtd-theme>=2.0  # (optional)
+
+# Debugging & Development Tools
+ipython>=8.20
+jupyter>=1.0
+jupyterlab>=4.0
+ipykernel>=6.28
+
+# Profiling & Optimization
+py-spy>=0.3  # Profiler
+memory-profiler>=0.61
+
+# Code Analysis
+pylint>=3.0  # (optional, stricter than ruff)
+bandit>=1.7  # Security linting
+
+# Documentation Auto-generation
+pdoc>=14.0  # API doc generation
+mkdocs>=1.5  # Static site generation
+
+# Visualization & Notebooks
+matplotlib>=3.8
+seaborn>=0.13
+plotly>=5.20
+
+# API Development (if needed for serving)
+fastapi>=0.110
+uvicorn>=0.27
+
+# Docker support (optional)
+docker>=7.0
+
+# Cloud deployment (optional)
+nb-cli>=0.8  # Streamlit deployment
+

@@ -1,0 +1,4 @@
+# Default data config placeholder for the semiconductor PCB lamination thesis
+input_path: data/raw
+output_path: data/processed
+

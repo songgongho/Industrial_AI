@@ -1,0 +1,5 @@
+# Default model config placeholder for the semiconductor PCB lamination thesis
+name: lstm_baseline
+hidden_dim: 128
+num_layers: 2
+
