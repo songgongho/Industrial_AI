@@ -123,17 +123,64 @@ with tabs[0]:
         st.markdown("- Process optimization suggestions and auto-reporting pipeline")
     with right:
         st.subheader("Project progress")
-        # simple milestone progress visualization
-        milestones = {
-            'POC & Repo Setup': 100,
-            'Literature Review (STAGE 1-5)': 100,
-            'Data Request Sent': 100,
-            'Data Validation Framework': 20,
-            'Causal Discovery (PCMCI/NOTEARS)': 0,
-            'GNN Model (MS-CDPNet)': 0,
-            'XAI (SHAP/Attention)': 10,
-            'Auto-report Pipeline': 10,
-        }
+        # compute milestone progress dynamically (heuristic)
+        def file_exists(relpath: str) -> bool:
+            return os.path.exists(os.path.join(ROOT, relpath))
+
+        milestones = {}
+        # POC & repo setup: README, pyproject, src/
+        poc = 100 if (file_exists('README.md') and file_exists('pyproject.toml') and os.path.isdir(os.path.join(ROOT, 'src'))) else 20
+        milestones['POC & Repo Setup'] = poc
+
+        # Literature review: presence of docs/literature files
+        lit_dir = os.path.join(ROOT, 'docs', 'literature')
+        lit_prog = 100 if os.path.isdir(lit_dir) and len(os.listdir(lit_dir)) > 0 else 0
+        milestones['Literature Review (STAGE 1-5)'] = lit_prog
+
+        # Data request sent: client request doc exists
+        dr = 100 if file_exists(os.path.join('docs', 'CLIENT_DATA_REQUEST.md')) else 0
+        milestones['Data Request Sent'] = dr
+
+        # Data validation framework: docs + validation script
+        dv = 0
+        if file_exists(os.path.join('docs', 'DATA_ANALYSIS_FRAMEWORK.md')):
+            dv += 60
+        if file_exists(os.path.join('scripts', 'validate_customer_data.py')):
+            dv += 30
+        milestones['Data Validation Framework'] = min(dv, 100)
+
+        # Causal discovery: mention in docs or runner script
+        cd = 0
+        if file_exists(os.path.join('docs', 'DATA_ANALYSIS_FRAMEWORK.md')):
+            try:
+                with open(os.path.join(ROOT, 'docs', 'DATA_ANALYSIS_FRAMEWORK.md'), 'r', encoding='utf-8') as _fh:
+                    txt = _fh.read()
+                if 'PCMCI' in txt or 'NOTEARS' in txt:
+                    cd = max(cd, 10)
+            except Exception:
+                pass
+        if file_exists(os.path.join('ml', 'run_pcmci_discovery.py')):
+            cd = max(cd, 40)
+        milestones['Causal Discovery (PCMCI/NOTEARS)'] = cd
+
+        # GNN model: check core model file
+        gnn = 30 if file_exists(os.path.join('src', 'models', 'pressfuse.py')) else 0
+        milestones['GNN Model (MS-CDPNet)'] = gnn
+
+        # XAI: check explain wrappers
+        xai = 0
+        if file_exists(os.path.join('src', 'explain', 'shap_wrapper.py')) or file_exists(os.path.join('src', 'explain', 'attention_viz.py')):
+            xai = 30
+        milestones['XAI (SHAP/Attention)'] = xai
+
+        # Auto-report pipeline: docs or existing script
+        ar = 0
+        if file_exists(os.path.join('docs', 'EXECUTION_CHECKLIST.md')):
+            ar += 10
+        if file_exists(os.path.join('scripts', 'generate_html_report.py')):
+            ar += 20
+        milestones['Auto-report Pipeline'] = min(ar, 100)
+
         for name, pct in milestones.items():
             st.markdown(f"**{name}**")
             st.progress(int(pct))
