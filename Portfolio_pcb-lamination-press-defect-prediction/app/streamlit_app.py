@@ -58,8 +58,8 @@ mode = st.sidebar.selectbox("Mode", ["Demo", "Upload Data"])
 run_actual_training = st.sidebar.checkbox("Run actual training (ml/train_mvp.py)", value=False)
 n_cycles = st.sidebar.number_input("# cycles (demo)", value=128, min_value=8, max_value=2048, step=8)
 
-# Tabs
-tabs = st.tabs(["Data", "Train", "Predict", "Explain", "Causal", "Report"])
+# Tabs (add Overview tab to show data request & project progress)
+tabs = st.tabs(["Overview", "Data", "Train", "Predict", "Explain", "Causal", "Report"])
 
 # Utility functions
 
@@ -98,8 +98,57 @@ def read_metrics(path: str) -> dict:
         return json.load(fh)
 
 
-# Data Tab
+# Overview Tab
 with tabs[0]:
+    st.header("Overview & Project Status")
+    left, right = st.columns([2, 1])
+    with left:
+        st.subheader("Customer data request (requested items)")
+        st.markdown("""
+1. Daily/Weekly/Monthly quality status (defect counts, PPM, by shift)
+2. Equipment run/stop history and per-process availability (OEE inputs)
+3. PRESS alarm history and recipe/parameter change logs
+4. LOT / PANEL / CYCLE mapping keys (traceability)
+5. Maintenance / calibration history and operator/shift info
+6. Process parameter time-series (temperature, pressure, time, flow, humidity)
+7. Column definitions, data timestamps and sampling rates
+""")
+        st.markdown("**Please provide column definitions and sampling rates when sending data.**")
+        st.markdown("---")
+        st.subheader("What we'll deliver after data reception")
+        st.markdown("- Data validation & synchronization (master timeseries)")
+        st.markdown("- EDA and root-cause analysis (PCMCI / NOTEARS + SHAP)")
+        st.markdown("- Anomaly detection (LSTM AE / IsolationForest / TFT)")
+        st.markdown("- GNN-based defect propagation model (MS-CDPNet)")
+        st.markdown("- Process optimization suggestions and auto-reporting pipeline")
+    with right:
+        st.subheader("Project progress")
+        # simple milestone progress visualization
+        milestones = {
+            'POC & Repo Setup': 100,
+            'Literature Review (STAGE 1-5)': 100,
+            'Data Request Sent': 100,
+            'Data Validation Framework': 20,
+            'Causal Discovery (PCMCI/NOTEARS)': 0,
+            'GNN Model (MS-CDPNet)': 0,
+            'XAI (SHAP/Attention)': 10,
+            'Auto-report Pipeline': 10,
+        }
+        for name, pct in milestones.items():
+            st.markdown(f"**{name}**")
+            st.progress(int(pct))
+        # show latest commit info
+        try:
+            git_info = subprocess.run(["git", "log", "-n", "1", "--pretty=format:%h %s"], capture_output=True, text=True)
+            latest_commit = git_info.stdout.strip() if git_info.returncode == 0 else "N/A"
+        except Exception:
+            latest_commit = "N/A"
+        st.markdown("---")
+        st.write(f"Latest commit: {latest_commit}")
+        st.write("Last update: 2026-05-26")
+
+# Data Tab
+with tabs[1]:
     st.header("1. Data")
     col1, col2 = st.columns([2, 1])
     with col1:
@@ -166,7 +215,7 @@ with tabs[0]:
                 st.info("No outputs to clear")
 
 # Train Tab
-with tabs[1]:
+with tabs[2]:
     st.header("2. Train")
     cols = st.columns(3)
     with cols[0]:
@@ -293,7 +342,7 @@ with tabs[1]:
             st.error(f"Failed to plot history: {e}")
 
 # Predict Tab
-with tabs[2]:
+with tabs[3]:
     st.header("3. Predict")
     if st.button("Load predictions from outputs/sample_run"):
         if os.path.exists(PRED_PATH):
@@ -327,7 +376,7 @@ with tabs[2]:
             st.info("No predictions found. Run training or generate dummy outputs in Train tab.")
 
 # Explain Tab
-with tabs[3]:
+with tabs[4]:
     st.header("4. Explain (SHAP / Attention)")
     st.write("SHAP and attention visualizations. If real files exist in outputs/sample_run they will be used; otherwise placeholders are shown.")
 
@@ -454,7 +503,7 @@ with tabs[3]:
             st.plotly_chart(fig2, use_container_width=True)
 
 # Causal Tab
-with tabs[4]:
+with tabs[5]:
     st.header("5. Causal")
     st.write("Load adjacency/edge-scores CSV files to visualize causal adjacency and top edges.")
 
@@ -541,7 +590,7 @@ with tabs[4]:
             st.error(f"Failed to render network graph: {e}")
 
 # Report Tab
-with tabs[5]:
+with tabs[6]:
     st.header("6. Report")
     st.write("Summary of key metrics, params and predictions. Download combined report JSON.")
 
@@ -596,5 +645,3 @@ with tabs[5]:
 
     st.markdown("---")
     st.write("Design notes: Replace metrics.json, params.json, predictions.csv with experiment outputs to generate the report. Later this JSON can be rendered to PDF/HTML for formal reports.")
-
-
