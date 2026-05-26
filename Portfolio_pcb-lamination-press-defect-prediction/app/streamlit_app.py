@@ -98,11 +98,69 @@ def read_metrics(path: str) -> dict:
         return json.load(fh)
 
 
+def read_text_file(path: str) -> str:
+    if not os.path.exists(path):
+        return ""
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            return fh.read()
+    except Exception:
+        return ""
+
+
+def extract_markdown_section(md_text: str, header: str, max_lines: int = 14) -> str:
+    """Extract a short preview block under a markdown header."""
+    if not md_text:
+        return ""
+    lines = md_text.splitlines()
+    start_idx = -1
+    for i, line in enumerate(lines):
+        if line.strip().lower().startswith(header.lower()):
+            start_idx = i
+            break
+    if start_idx < 0:
+        return ""
+
+    block = []
+    for line in lines[start_idx + 1 :]:
+        if line.startswith("## "):
+            break
+        if line.strip():
+            block.append(line)
+        if len(block) >= max_lines:
+            break
+    return "\n".join(block).strip()
+
+
 # Overview Tab
 with tabs[0]:
     st.header("Overview & Project Status")
     left, right = st.columns([2, 1])
     with left:
+        framework_path = os.path.join(ROOT, "docs", "DATA_ANALYSIS_FRAMEWORK.md")
+        framework_md = read_text_file(framework_path)
+
+        st.subheader("Auto summary from DATA_ANALYSIS_FRAMEWORK.md")
+        if framework_md:
+            sec_req = extract_markdown_section(framework_md, "## Section 1", max_lines=8)
+            sec_plan = extract_markdown_section(framework_md, "## Section 2", max_lines=8)
+            sec_status = extract_markdown_section(framework_md, "## Section 5", max_lines=8)
+
+            col_a, col_b = st.columns(2)
+            with col_a:
+                st.caption("Section 1 preview")
+                st.markdown(sec_req if sec_req else "- Not found")
+                st.caption("Section 2 preview")
+                st.markdown(sec_plan if sec_plan else "- Not found")
+            with col_b:
+                st.caption("Section 5 preview")
+                st.markdown(sec_status if sec_status else "- Not found")
+                with st.expander("Open full framework markdown"):
+                    st.markdown(framework_md)
+        else:
+            st.info("`docs/DATA_ANALYSIS_FRAMEWORK.md` not found yet.")
+
+        st.markdown("---")
         st.subheader("Customer data request (requested items)")
         st.markdown("""
 1. Daily/Weekly/Monthly quality status (defect counts, PPM, by shift)
@@ -193,6 +251,44 @@ with tabs[0]:
         st.markdown("---")
         st.write(f"Latest commit: {latest_commit}")
         st.write("Last update: 2026-05-26")
+        st.markdown("---")
+        st.subheader("Quick actions")
+        run_col_a, run_col_b = st.columns([2, 1])
+        with run_col_a:
+            if st.button("Run data validation (scripts/validate_customer_data.py)"):
+                try:
+                    out = subprocess.run(["python", os.path.join("scripts", "validate_customer_data.py")], capture_output=True, text=True, check=False)
+                    st.code(out.stdout + ("\nErrors:\n" + out.stderr if out.stderr else ""))
+                    vr = os.path.join(ROOT, 'data', 'customer', 'validation_report.json')
+                    if os.path.exists(vr):
+                        st.success(f"Validation report saved: {vr}")
+                        with open(vr, 'rb') as fh:
+                            st.download_button("Download validation_report.json", data=fh.read(), file_name='validation_report.json')
+                except Exception as e:
+                    st.error(f"Validation run failed: {e}")
+            if st.button("Run synchronization (scripts/synchronize_customer_data.py)"):
+                try:
+                    out = subprocess.run(["python", os.path.join("scripts", "synchronize_customer_data.py")], capture_output=True, text=True, check=False)
+                    st.code(out.stdout + ("\nErrors:\n" + out.stderr if out.stderr else ""))
+                    ms = os.path.join(ROOT, 'data', 'customer', 'processed', 'master_synchronized.parquet')
+                    if os.path.exists(ms):
+                        st.success(f"Master synchronized data saved: {ms}")
+                except Exception as e:
+                    st.error(f"Synchronization failed: {e}")
+            if st.button("Run EDA (scripts/eda_customer_data.py)"):
+                try:
+                    out = subprocess.run(["python", os.path.join("scripts", "eda_customer_data.py")], capture_output=True, text=True, check=False)
+                    st.code(out.stdout + ("\nErrors:\n" + out.stderr if out.stderr else ""))
+                    eda_json = os.path.join(ROOT, 'outputs', 'eda', 'eda_report.json')
+                    if os.path.exists(eda_json):
+                        st.success(f"EDA report: {eda_json}")
+                        with open(eda_json, 'rb') as fh:
+                            st.download_button("Download eda_report.json", data=fh.read(), file_name='eda_report.json')
+                except Exception as e:
+                    st.error(f"EDA failed: {e}")
+        with run_col_b:
+            if st.button("Refresh progress"):
+                st.experimental_rerun()
 
 # Data Tab
 with tabs[1]:
