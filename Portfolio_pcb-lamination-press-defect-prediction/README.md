@@ -145,12 +145,57 @@ python scripts/generate_html_report.py \
   --output app/data/dashboard-results.html
 ```
 
-### 웹 대시보드 실행
+### 대시보드 실행 방법
+
+#### 방법 1: 더블클릭으로 실행 (가장 간단) ⭐
+
+**Windows 사용자 추천:**
+1. 프로젝트 폴더에서 `run_dashboard.py` 파일을 더블클릭
+2. 자동으로 Streamlit 서버가 시작되고 브라우저가 열립니다
+3. `http://localhost:8501` 에서 대시보드 확인
+
+> ✅ **장점**: 터미널 명령어 없이 원클릭으로 실행, 완벽한 사용자 경험
+
+#### 방법 2: 터미널에서 실행
 
 ```bash
-streamlit run scripts/ui.py
-# 접속: http://localhost:8501
+# 프로젝트 루트에서
+python run_dashboard.py
 ```
+
+또는 직접 Streamlit 실행:
+```bash
+streamlit run app/streamlit_app.py
+```
+
+접속: `http://localhost:8501`
+
+#### 방법 3: PyInstaller로 .exe 생성 (고급)
+
+나중에 배포용 `.exe` 파일을 만들려면:
+
+```bash
+# 1. PyInstaller 설치
+pip install pyinstaller
+
+# 2. run_dashboard.py를 .exe로 변환
+pyinstaller --onefile --windowed run_dashboard.py
+
+# 3. 생성된 .exe는 dist/ 폴더에서 확인
+# dist/run_dashboard.exe 를 더블클릭하면 대시보드 실행
+```
+
+---
+
+#### 대시보드 기능
+
+- **Overview**: 프로젝트 현황, 마일스톤 진척도, 고객 요청 데이터 항목 요약
+- **Data**: 데모 데이터 생성 및 업로드
+- **Train**: 모델 학습 및 하이퍼파라미터 조정
+- **Predict**: 예측 결과 및 성능 메트릭
+- **Explain**: SHAP, Attention 시각화
+- **Causal**: 센서 간 인과관계 분석
+- **Report**: 종합 리포트 다운로드
 
 ---
 
