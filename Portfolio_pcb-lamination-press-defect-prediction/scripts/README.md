@@ -10,4 +10,5 @@
 - **analyze_dataset.py** — 데이터셋 탐색 분석
 - **download_datasets.py** — 공개 데이터셋(SECOM, DeepPCB 등) 다운로드
 - **generate_bibliography.py** — 논문 노트 및 BibTeX 자동 생성
+- **quality_intelligence_ui.py** — 품질/불량/PRESS 상관관계 분석용 Streamlit 대시보드
 - **ui.py** — Streamlit 대시보드 실행

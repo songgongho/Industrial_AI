@@ -10,7 +10,8 @@ __pycache__/
 *.pyo
 
 # Large data files
-data/raw/
+data/raw/*
+!data/raw/.gitkeep
 data/interim/uploads/
 data/processed/
 
@@ -51,3 +52,10 @@ Thumbs.db
 *.pkl
 *.h5
 *.onnx
+
+# Literature review - raw materials (local backup only)
+docs/literature/raw_materials/
+
+# Outputs and temporary data
+outputs/
+notebooks/.ipynb_checkpoints/
