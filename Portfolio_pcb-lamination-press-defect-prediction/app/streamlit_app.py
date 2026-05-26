@@ -1,14 +1,17 @@
-"""Minimal Streamlit demo for PCB Press MVP
+# -*- coding: utf-8 -*-
+"""
+PressXAI MVP Streamlit Dashboard
+PCB 적층 공정 불량 예측 및 분석 대시보드
 
-Features:
-- Data tab: generate demo CSV or upload
-- Train tab: run training (dummy or call ml/train_mvp.py)
-- Predict tab: read predictions.csv and show metrics/table
-- Explain tab: SHAP/Attention placeholders (load if exist)
-- Causal tab: dummy adjacency visualization
-- Report tab: download artifacts
+기능:
+- Data 탭: 데모 데이터 생성 및 업로드
+- Train 탭: 모델 학습
+- Predict 탭: 예측 결과 및 메트릭
+- Explain 탭: SHAP 및 Attention 시각화
+- Causal 탭: 인과관계 분석
+- Report 탭: 종합 리포트 다운로드
 
-Run: streamlit run app/streamlit_app.py
+실행: streamlit run app/streamlit_app.py
 """
 
 from __future__ import annotations
