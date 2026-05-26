@@ -252,6 +252,38 @@ with tabs[0]:
         st.write(f"Latest commit: {latest_commit}")
         st.write("Last update: 2026-05-26")
         st.markdown("---")
+        st.subheader("Runtime artifact status")
+        validation_report_path = os.path.join(ROOT, 'data', 'customer', 'validation_report.json')
+        sync_path = os.path.join(ROOT, 'data', 'customer', 'processed', 'master_synchronized.parquet')
+        eda_path = os.path.join(ROOT, 'outputs', 'eda', 'eda_report.json')
+        pcmci_path = os.path.join(ROOT, 'outputs', 'pcmci_result.json')
+
+        artifact_checks = [
+            ('Validation report', validation_report_path),
+            ('Synchronized master data', sync_path),
+            ('EDA report', eda_path),
+            ('PCMCI result', pcmci_path),
+            ('Training metrics', METRICS_PATH),
+            ('Predictions', PRED_PATH),
+        ]
+        for label, path in artifact_checks:
+            ok = os.path.exists(path)
+            st.write(f"{'OK' if ok else 'MISSING'} - {label}")
+
+        # If metrics exist, expose a tiny KPI strip in Overview
+        kpis = read_metrics(METRICS_PATH)
+        if kpis:
+            st.caption('Latest training KPIs')
+            kpi_cols = st.columns(min(4, len(kpis)))
+            for i, (k, v) in enumerate(kpis.items()):
+                if i >= len(kpi_cols):
+                    break
+                try:
+                    kpi_cols[i].metric(k, f"{float(v):.3f}")
+                except Exception:
+                    kpi_cols[i].metric(k, str(v))
+
+        st.markdown("---")
         st.subheader("Quick actions")
         run_col_a, run_col_b = st.columns([2, 1])
         with run_col_a:
